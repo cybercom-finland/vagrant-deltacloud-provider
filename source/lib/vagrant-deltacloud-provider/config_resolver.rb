@@ -76,7 +76,7 @@ module VagrantPlugins
         config = env[:machine].provider_config
         return [] if config.volumes.nil? || config.volumes.empty?
         env[:ui].info(I18n.t('vagrant_deltacloud.finding_volumes'))
-        return resolve_volumes_without_volume_service(env)
+        resolve_volumes_without_volume_service(env)
       end
 
       def resolve_ssh_username(env)

@@ -19,7 +19,6 @@ module VagrantPlugins
         end
 
         def execute(env)
-          client = env[:deltacloud_client]
           @app.call(env) unless @app.nil?
         end
 

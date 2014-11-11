@@ -24,8 +24,6 @@ module VagrantPlugins
         def execute(env)
           @logger.info 'Start create server action'
 
-          config = env[:machine].provider_config
-
           options = {
             flavor: @resolver.resolve_flavor(env),
             image: @resolver.resolve_image(env),
