@@ -10,7 +10,7 @@ en:
 
       If doing this does not help fixing your issue, there may be a bug
       in the provider. Please submit an issue on Github at
-      https://github.com/ggiamarchi/vagrant-openstack-provider
+      https://github.com/cybercom-finland/vagrant-deltacloud-provider
       with the stracktrace and the logs.
 
       We are looking for feedback, so feel free to ask questions or
