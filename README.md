@@ -56,7 +56,7 @@ Vagrant.configure('2') do |config|
   config.ssh.username = 'ec2-user'
 
   config.vm.provider :deltacloud do |os|
-    os.deltacloud_url = 'http://keystone-server.net/v2.0/tokens'
+    os.deltacloud_api_url = 'https://standard.fi-central.cybercomcloud.com/api'
     os.username           = 'deltacloudUser'
     os.password           = 'deltacloudPassword'
     os.tenant_name        = 'myTenant'
@@ -177,7 +177,7 @@ end
 
 ### SSH authentication
 
-* `keypair_name` - The name of the key pair register in nova to associate with the VM. The public key should
+* `keypair_name` - The name of the key pair register in Deltacloud to associate with the VM. The public key should
   be the matching pair for the private key configured with `config.ssh.private_key_path` on Vagrant.
 * `public_key_path` - if `keypair_name` is not provided, the path to the public key will be used by vagrant to generate a keypair on the Deltacloud cloud. The keypair will be destroyed when the VM is destroyed.
 
