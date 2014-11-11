@@ -3,6 +3,24 @@ require 'vagrant-deltacloud-provider/spec_helper'
 describe VagrantPlugins::Deltacloud::Command::NetworkList do
   describe 'cmd' do
 
+    let(:deltacloud) do
+      double('deltacloud').tap do |neutron|
+        neutron.stub(:get_private_networks) do
+          [
+            Item.new('net-01', 'internal'),
+            Item.new('net-02', 'external')
+          ]
+        end
+        neutron.stub(:get_all_networks) do
+          [
+            Item.new('pub-01', 'public'),
+            Item.new('net-01', 'internal'),
+            Item.new('net-02', 'external')
+          ]
+        end
+      end
+    end
+
     let(:env) do
       Hash.new.tap do |env|
         env[:ui] = double('ui')
