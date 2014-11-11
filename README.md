@@ -268,7 +268,7 @@ Note: Vagrant 1.6 requires bundler version < 1.7. We recommend using last 1.6
 version.
 
 ```
-$ gem install bundler -v 1.6.6
+$ gem install bundler -v 1.6.8
 ```
 
 Install the plugin dependencies
