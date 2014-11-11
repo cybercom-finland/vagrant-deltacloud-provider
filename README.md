@@ -215,7 +215,7 @@ creating and connecting to DeltaCloud machines
 
 Every provider in Vagrant must introduce a custom box format. This
 provider introduces `deltacloud` boxes. You can view an example box in
-the [example_box/ directory](https://github.com/ggiamarchi/vagrant-deltacloud-provider/tree/master/source/example_box).
+the [example_box/ directory](https://github.com/cybercom-finland/vagrant-deltacloud-provider/tree/master/source/example_box).
 That directory also contains instructions on how to build a box.
 
 The box format is basically just the required `metadata.json` file
