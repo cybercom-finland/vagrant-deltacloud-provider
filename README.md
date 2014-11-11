@@ -1,17 +1,19 @@
-# Vagrant DeltaCloud Cloud Provider
+# Vagrant Deltacloud Cloud Provider
 
 **WORK IN PROGRESS**
 
 This is a [Vagrant](http://www.vagrantup.com) 1.4+ plugin that adds a
-[DeltaCloud](https://deltacloud.apache.org/) provider to Vagrant,
-allowing Vagrant to control and provision machines within DeltaCloud
+[Deltacloud](https://deltacloud.apache.org/) provider to Vagrant,
+allowing Vagrant to control and provision machines within Deltacloud
 cloud.
 
 **Note:** This plugin was originally forked from [https://github.com/ggiamarchi/vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider)
 
+This plugin is made to work for example with Cybercom Deltacloud API: [https://confluence.cybercom.com/display/CYBERCLOUD/Using+Cybercom+Cloud+API](https://confluence.cybercom.com/display/CYBERCLOUD/Using+Cybercom+Cloud+API)
+
 ## Features
 
-* Create and boot DeltaCloud instances
+* Create and boot Deltacloud instances
 * Halt and reboot instances
 * Suspend and resume instances
 * SSH into the instances
@@ -31,7 +33,7 @@ $ vagrant up --provider=deltacloud
 ...
 ```
 
-Of course prior to doing this, you'll need to obtain an DeltaCloud-compatible
+Of course prior to doing this, you'll need to obtain an Deltacloud-compatible
 box file for Vagrant.
 
 ## Quick Start
@@ -77,14 +79,14 @@ This provider exposes quite a few provider-specific configuration options:
 
 ### Credentials
 
-* `username` - The username with which to access DeltaCloud.
-* `password` - The API key for accessing DeltaCloud.
-* `tenant_name` - The DeltaCloud project name to work on
-* `deltacloud_url` - The DeltaCloud endpoint.
+* `username` - The username with which to access Deltacloud.
+* `password` - The API key for accessing Deltacloud.
+* `tenant_name` - The Deltacloud project name to work on
+* `deltacloud_url` - The Deltacloud endpoint.
 
 ### VM Configuration
 
-* `server_name` - The name of the server within DeltaCloud Cloud. This
+* `server_name` - The name of the server within Deltacloud Cloud. This
   defaults to the name of the Vagrant machine (via `config.vm.define`), but
   can be overridden with this.
 * `flavor` - The name of the flavor to use for the VM
@@ -94,21 +96,21 @@ This provider exposes quite a few provider-specific configuration options:
 * `floating_ip_pool_always_allocate` - if set to true, vagrant will always allocate floating ip instead of trying to reuse unassigned ones
 * `availability_zone` - Nova Availability zone used when creating VM
 * `security_groups` - List of strings representing the security groups to apply. e.g. ['ssh', 'http']
-* `user_data` - String of User data to be sent to the newly created DeltaCloud instance. Use this e.g. to inject a script at boot time.
+* `user_data` - String of User data to be sent to the newly created Deltacloud instance. Use this e.g. to inject a script at boot time.
 * `metadata` - A Hash of metadata that will be sent to the instance for configuration e.g. `os.metadata  = { 'key' => 'value' }`
-* `scheduler_hints` - Pass hints to the DeltaCloud scheduler, e.g. { "cell": "some cell name" }
+* `scheduler_hints` - Pass hints to the Deltacloud scheduler, e.g. { "cell": "some cell name" }
 
 #### Networks
 
 * `networks` - Network list the server must be connected on. Can be omitted if only one private network exists
-  in the DeltaCloud project
+  in the Deltacloud project
 
 Networking features in the form of `config.vm.network` are not
 supported with `vagrant-deltacloud`, currently. If any of these are
 specified, Vagrant will emit a warning, but will otherwise boot
-the DeltaCloud server.
+the Deltacloud server.
 
-You can provide network id or name. However, in DeltaCloud a network name is not unique, thus if there are two networks with
+You can provide network id or name. However, in Deltacloud a network name is not unique, thus if there are two networks with
 the same name in your project the plugin will fail. If so, you have to use only ids. Optionally, you can specify the IP
 address that will be assigned to the instance if you need a static address or if DHCP is not enable for this network.
 
@@ -141,7 +143,7 @@ end
 
 #### Volumes
 
-* `volumes` - Volume list that have to be attached to the server. You can provide volume id or name. However, in DeltaCloud
+* `volumes` - Volume list that have to be attached to the server. You can provide volume id or name. However, in Deltacloud
 a volume name is not unique, thus if there are two volumes with the same name in your project the plugin will fail. If so,
 you have to use only ids. Optionally, you can specify the device that will be assigned to the volume.
 
@@ -177,22 +179,22 @@ end
 
 * `keypair_name` - The name of the key pair register in nova to associate with the VM. The public key should
   be the matching pair for the private key configured with `config.ssh.private_key_path` on Vagrant.
-* `public_key_path` - if `keypair_name` is not provided, the path to the public key will be used by vagrant to generate a keypair on the DeltaCloud cloud. The keypair will be destroyed when the VM is destroyed.
+* `public_key_path` - if `keypair_name` is not provided, the path to the public key will be used by vagrant to generate a keypair on the Deltacloud cloud. The keypair will be destroyed when the VM is destroyed.
 
-If neither `keypair_name` nor `public_key_path` are set, vagrant will generate a new ssh key and automatically import it in DeltaCloud.
+If neither `keypair_name` nor `public_key_path` are set, vagrant will generate a new ssh key and automatically import it in Deltacloud.
 
 * `ssh_disabled` - if set to `true`, all ssh actions managed by the provider will be disabled. We recommend to use this option only to create private VMs that won't be accessed directly from vagrant. Some actions might still want to connect with SSH (provisionners...). In this case, we will just warn you that the ssh action is likely to fail, but we won't forbid it
 
 ### Synced folders
 
 * `sync_method` - Specify the synchronization method for shared folder between the host and the remote VM.
-  Currently, it can be "rsync" or "none". The default value is "rsync". If your DeltaCloud image does not
+  Currently, it can be "rsync" or "none". The default value is "rsync". If your Deltacloud image does not
   include rsync, you must set this parameter to "none".
 * `rsync_includes` - If `sync_method` is set to "rsync", this parameter give the list of local folders to sync
   on the remote VM.
 
 There is minimal support for synced folders. Upon `vagrant up`,
-`vagrant reload`, and `vagrant provision`, the DeltaCloud provider will use
+`vagrant reload`, and `vagrant provision`, the Deltacloud provider will use
 `rsync` (if available) to uni-directionally sync the folder to
 the remote machine over SSH.
 
@@ -202,7 +204,7 @@ chef, and puppet) to work!
 ## Vagrant standard configuration
 
 There are some standard configuration options that this provider takes into account when
-creating and connecting to DeltaCloud machines
+creating and connecting to Deltacloud machines
 
 * `config.vm.box` - A box is not mandatory for this provider. However, if you are running Vagrant before version 1.6, vagrant will not start
    if this property is not set. In this case you can assign any value to it. See section "Box Format" to know more about boxes.
@@ -224,7 +226,7 @@ provider-specific configuration for this provider.
 
 ## Custom commands
 
-Custom commands are provided for DeltaCloud. Type `vagrant deltacloud` to
+Custom commands are provided for Deltacloud. Type `vagrant deltacloud` to
 show available commands.
 
 ```
@@ -238,7 +240,7 @@ Available subcommands:
      network-list         List private networks in project
      floatingip-list      List floating IP and floating IP pools
      volume-list          List existing volumes
-     reset                Reset Vagrant DeltaCloud provider to a clear state
+     reset                Reset Vagrant Deltacloud provider to a clear state
 ```
 
 For instance `vagrant deltacloud image-list` lists images available in Glance.
@@ -297,7 +299,7 @@ $ bundle exec vagrant up --provider=deltacloud
 ### Logging
 
 To enable all Vagrant logs set environment variable `VAGRANT_LOG` to the desire
-log level (for instance `VAGRANT_LOG=debug`). If you want only DeltaCloud provider
+log level (for instance `VAGRANT_LOG=debug`). If you want only Deltacloud provider
 logs use the variable `VAGRANT_DELTACLOUD_LOG`. if both variables are set, `VAGRANT_LOG`
 takes precedence.
 
