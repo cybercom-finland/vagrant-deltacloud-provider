@@ -2,23 +2,23 @@ require 'log4r'
 require 'restclient'
 require 'json'
 
-require 'vagrant-openstack-provider/client/request_logger'
+require 'vagrant-deltacloud-provider/client/request_logger'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class KeystoneClient
       include Singleton
-      include VagrantPlugins::Openstack::HttpUtils::RequestLogger
+      include VagrantPlugins::Deltacloud::HttpUtils::RequestLogger
 
       def initialize
-        @logger = Log4r::Logger.new('vagrant_openstack::keystone')
-        @session = VagrantPlugins::Openstack.session
+        @logger = Log4r::Logger.new('vagrant_deltacloud::keystone')
+        @session = VagrantPlugins::Deltacloud.session
       end
 
       def authenticate(env)
         @logger.info('Authenticating on Keystone')
         config = env[:machine].provider_config
-        @logger.info(I18n.t('vagrant_openstack.client.authentication', project: config.tenant_name, user: config.username))
+        @logger.info(I18n.t('vagrant_deltacloud.client.authentication', project: config.tenant_name, user: config.username))
 
         post_body =
           {
@@ -33,11 +33,11 @@ module VagrantPlugins
               }
           }
 
-        log_request(:POST, config.openstack_auth_url, post_body.to_json)
+        log_request(:POST, config.deltacloud_auth_url, post_body.to_json)
 
         post_body[:auth][:passwordCredentials][:password] = config.password
 
-        authentication = RestClient.post(config.openstack_auth_url, post_body.to_json,
+        authentication = RestClient.post(config.deltacloud_auth_url, post_body.to_json,
                                          content_type: :json,
                                          accept: :json) do |response|
           log_response(response)
@@ -49,7 +49,7 @@ module VagrantPlugins
           when 404
             fail Errors::BadAuthenticationEndpoint
           else
-            fail Errors::VagrantOpenstackError, message: response.to_s
+            fail Errors::VagrantDeltacloudError, message: response.to_s
           end
         end
 

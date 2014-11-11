@@ -1,20 +1,20 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::GlanceClient do
+describe VagrantPlugins::Deltacloud::GlanceClient do
 
   let(:env) do
     Hash.new
   end
 
   let(:session) do
-    VagrantPlugins::Openstack.session
+    VagrantPlugins::Deltacloud.session
   end
 
   before :each do
     session.token = '123456'
     session.project_id = 'a1b2c3'
     session.endpoints = { image: 'http://glance' }
-    @glance_client = VagrantPlugins::Openstack.glance
+    @glance_client = VagrantPlugins::Deltacloud.glance
   end
 
   describe 'get_all_images' do

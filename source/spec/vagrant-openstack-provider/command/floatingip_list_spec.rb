@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Command::FloatingIpList do
+describe VagrantPlugins::Deltacloud::Command::FloatingIpList do
   describe 'cmd' do
 
     let(:nova) do
@@ -40,13 +40,13 @@ describe VagrantPlugins::Openstack::Command::FloatingIpList do
       Hash.new.tap do |env|
         env[:ui] = double('ui')
         env[:ui].stub(:info).with(anything)
-        env[:openstack_client] = double
-        env[:openstack_client].stub(:nova) { nova }
+        env[:deltacloud_client] = double
+        env[:deltacloud_client].stub(:nova) { nova }
       end
     end
 
     before :each do
-      @floating_ip_list_cmd = VagrantPlugins::Openstack::Command::FloatingIpList.new(nil, env)
+      @floating_ip_list_cmd = VagrantPlugins::Deltacloud::Command::FloatingIpList.new(nil, env)
     end
 
     it 'prints floating ip and floating ip pool from server' do

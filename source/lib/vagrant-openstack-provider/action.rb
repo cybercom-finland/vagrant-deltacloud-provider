@@ -3,7 +3,7 @@ require 'pathname'
 require 'vagrant/action/builder'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Action
       # Include the built-in modules so we can use them as top-level things.
       include Vagrant::Action::Builtin
@@ -12,10 +12,10 @@ module VagrantPlugins
       def self.action_destroy
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             else
               b2.use DeleteServer
             end
@@ -27,10 +27,10 @@ module VagrantPlugins
       def self.action_provision
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             else
               b2.use Provision
               b2.use SyncFolders
@@ -45,7 +45,7 @@ module VagrantPlugins
       def self.action_read_ssh_info
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use ReadSSHInfo
         end
       end
@@ -56,7 +56,7 @@ module VagrantPlugins
       def self.action_read_state
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use ReadState
         end
       end
@@ -64,10 +64,10 @@ module VagrantPlugins
       def self.action_ssh
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             else
               b2.use SSHExec
             end
@@ -78,10 +78,10 @@ module VagrantPlugins
       def self.action_ssh_run
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             else
               b2.use SSHRun
             end
@@ -92,7 +92,7 @@ module VagrantPlugins
       def self.action_up
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
 
           b.use Call, ReadState do |env, b2|
             case env[:machine_state_id]
@@ -106,7 +106,7 @@ module VagrantPlugins
             when :suspended
               b2.use Resume
             else
-              b2.use Message, I18n.t('vagrant_openstack.already_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.already_created')
             end
           end
         end
@@ -115,10 +115,10 @@ module VagrantPlugins
       def self.action_halt
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             else
               b2.use StopServer
             end
@@ -131,12 +131,12 @@ module VagrantPlugins
       def self.action_suspend
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             elsif env[:machine_state_id] == :suspended
-              b2.use Message, I18n.t('vagrant_openstack.already_suspended')
+              b2.use Message, I18n.t('vagrant_deltacloud.already_suspended')
             else
               b2.use Suspend
             end
@@ -149,10 +149,10 @@ module VagrantPlugins
       def self.action_resume
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             else
               b2.use Resume
             end
@@ -163,11 +163,11 @@ module VagrantPlugins
       def self.action_reload
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectOpenstack
+          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             case env[:machine_state_id]
             when :not_created
-              b2.use Message, I18n.t('vagrant_openstack.not_created')
+              b2.use Message, I18n.t('vagrant_deltacloud.not_created')
             when :suspended
               b2.use Resume
               b2.use WaitForServerToBeActive
@@ -188,7 +188,7 @@ module VagrantPlugins
       # The autoload farm
       action_root = Pathname.new(File.expand_path('../action', __FILE__))
       autoload :Message, action_root.join('message')
-      autoload :ConnectOpenstack, action_root.join('connect_openstack')
+      autoload :ConnectDeltacloud, action_root.join('connect_deltacloud')
       autoload :CreateServer, action_root.join('create_server')
       autoload :DeleteServer, action_root.join('delete_server')
       autoload :StopServer, action_root.join('stop_server')

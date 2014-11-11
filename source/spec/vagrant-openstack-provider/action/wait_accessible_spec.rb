@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Action::WaitForServerToBeAccessible do
+describe VagrantPlugins::Deltacloud::Action::WaitForServerToBeAccessible do
 
   let(:config) do
     double('config')

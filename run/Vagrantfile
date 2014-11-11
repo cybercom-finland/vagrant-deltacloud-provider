@@ -46,7 +46,7 @@ install() {
 }
 
 runTests() {
-  run "" cd /vagrant-openstack
+  run "" cd /vagrant-deltacloud
   run "Run 'bundle update'" bundle update
   run "Run 'bundle install'" bundle install
   run "Run 'bundle exec rake" bundle exec rake
@@ -87,7 +87,7 @@ Vagrant.configure("2") do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.synced_folder "../source", "/vagrant-openstack"
+  config.vm.synced_folder "../source", "/vagrant-deltacloud"
 
   config.vm.provision "shell", inline: $script
 

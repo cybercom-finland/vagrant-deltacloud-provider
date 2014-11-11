@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Action::DeleteServer do
+describe VagrantPlugins::Deltacloud::Action::DeleteServer do
 
   let(:nova) do
     double('nova').tap do |app|
@@ -9,8 +9,8 @@ describe VagrantPlugins::Openstack::Action::DeleteServer do
     end
   end
 
-  let(:openstack_client) do
-    double('openstack_client').tap do |os|
+  let(:deltacloud_client) do
+    double('deltacloud_client').tap do |os|
       os.stub(:nova) { nova }
     end
   end
@@ -20,7 +20,7 @@ describe VagrantPlugins::Openstack::Action::DeleteServer do
       env[:ui] = double('ui')
       env[:ui].stub(:info).with(anything)
       env[:ui].stub(:error).with(anything)
-      env[:openstack_client] = openstack_client
+      env[:deltacloud_client] = deltacloud_client
       env[:machine] = OpenStruct.new.tap do |m|
         m.id = 'server_id'
       end

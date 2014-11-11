@@ -1,5 +1,5 @@
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     VERSION = '0.5.2'
   end
 end

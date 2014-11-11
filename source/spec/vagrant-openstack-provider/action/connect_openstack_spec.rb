@@ -1,9 +1,9 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-include VagrantPlugins::Openstack::Action
-include VagrantPlugins::Openstack::HttpUtils
+include VagrantPlugins::Deltacloud::Action
+include VagrantPlugins::Deltacloud::HttpUtils
 
-describe VagrantPlugins::Openstack::Action::ConnectOpenstack do
+describe VagrantPlugins::Deltacloud::Action::ConnectDeltacloud do
 
   let(:app) do
     double.tap do |app|
@@ -13,11 +13,11 @@ describe VagrantPlugins::Openstack::Action::ConnectOpenstack do
 
   let(:config) do
     double.tap do |config|
-      config.stub(:openstack_auth_url) { 'http://keystoneAuthV2' }
-      config.stub(:openstack_compute_url) { nil }
-      config.stub(:openstack_network_url) { nil }
-      config.stub(:openstack_volume_url) { nil }
-      config.stub(:openstack_image_url) { nil }
+      config.stub(:deltacloud_auth_url) { 'http://keystoneAuthV2' }
+      config.stub(:deltacloud_compute_url) { nil }
+      config.stub(:deltacloud_network_url) { nil }
+      config.stub(:deltacloud_volume_url) { nil }
+      config.stub(:deltacloud_image_url) { nil }
       config.stub(:tenant_name) { 'testTenant' }
       config.stub(:username) { 'username' }
       config.stub(:password) { 'password' }
@@ -69,22 +69,22 @@ describe VagrantPlugins::Openstack::Action::ConnectOpenstack do
       env[:ui].stub(:warn).with(anything)
       env[:machine] = double('machine')
       env[:machine].stub(:provider_config) { config }
-      env[:openstack_client] = double('openstack_client')
-      env[:openstack_client].stub(:neutron) { neutron }
-      env[:openstack_client].stub(:glance) { glance }
+      env[:deltacloud_client] = double('deltacloud_client')
+      env[:deltacloud_client].stub(:neutron) { neutron }
+      env[:deltacloud_client].stub(:glance) { glance }
     end
   end
 
   before(:all) do
-    ConnectOpenstack.send(:public, *ConnectOpenstack.private_instance_methods)
+    ConnectDeltacloud.send(:public, *ConnectDeltacloud.private_instance_methods)
   end
 
   before :each do
-    VagrantPlugins::Openstack.session.reset
-    @action = ConnectOpenstack.new(app, env)
+    VagrantPlugins::Deltacloud.session.reset
+    @action = ConnectDeltacloud.new(app, env)
   end
 
-  describe 'ConnectOpenstack' do
+  describe 'ConnectDeltacloud' do
     context 'with one endpoint by service' do
       it 'read service catalog and stores endpoints URL in session' do
         catalog = [
@@ -132,14 +132,14 @@ describe VagrantPlugins::Openstack::Action::ConnectOpenstack do
 
         double.tap do |keystone|
           keystone.stub(:authenticate).with(anything) { catalog }
-          env[:openstack_client].stub(:keystone) { keystone }
+          env[:deltacloud_client].stub(:keystone) { keystone }
         end
-        env[:openstack_client].stub(:neutron)  { neutron }
-        env[:openstack_client].stub(:glance)   { glance }
+        env[:deltacloud_client].stub(:neutron)  { neutron }
+        env[:deltacloud_client].stub(:glance)   { glance }
 
         @action.call(env)
 
-        expect(env[:openstack_client].session.endpoints)
+        expect(env[:deltacloud_client].session.endpoints)
           .to eq(compute: 'http://nova/v2/projectId',
                  network: 'http://neutron/v2.0',
                  volume:  'http://cinder/v2/projectId',
@@ -168,13 +168,13 @@ describe VagrantPlugins::Openstack::Action::ConnectOpenstack do
 
         double.tap do |keystone|
           keystone.stub(:authenticate).with(anything) { catalog }
-          env[:openstack_client].stub(:keystone) { keystone }
+          env[:deltacloud_client].stub(:keystone) { keystone }
         end
-        env[:openstack_client].stub(:neutron) { neutron }
+        env[:deltacloud_client].stub(:neutron) { neutron }
 
         @action.call(env)
 
-        expect(env[:openstack_client].session.endpoints).to eq(network: 'http://neutron/v2.0')
+        expect(env[:deltacloud_client].session.endpoints).to eq(network: 'http://neutron/v2.0')
       end
     end
 
@@ -225,9 +225,9 @@ describe VagrantPlugins::Openstack::Action::ConnectOpenstack do
 
         double.tap do |keystone|
           keystone.stub(:authenticate).with(anything) { catalog }
-          env[:openstack_client].stub(:keystone) { keystone }
+          env[:deltacloud_client].stub(:keystone) { keystone }
         end
-        env[:openstack_client].stub(:neutron) { neutron }
+        env[:deltacloud_client].stub(:neutron) { neutron }
 
         expect { @action.call(env) }.to raise_error(Errors::NoMatchingApiVersion)
       end
@@ -260,12 +260,12 @@ describe VagrantPlugins::Openstack::Action::ConnectOpenstack do
 
         double.tap do |keystone|
           keystone.stub(:authenticate).with(anything) { catalog }
-          env[:openstack_client].stub(:keystone) { keystone }
+          env[:deltacloud_client].stub(:keystone) { keystone }
         end
 
         @action.call(env)
 
-        expect(env[:openstack_client].session.endpoints)
+        expect(env[:deltacloud_client].session.endpoints)
         .to eq(compute: 'http://nova/v2/projectId', identity: 'http://keystone/v2.0')
       end
     end

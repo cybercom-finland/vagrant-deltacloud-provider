@@ -1,5 +1,5 @@
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Command
       COMMANDS = [
         { name: :'image-list', file: 'image_list' , clazz: 'ImageList' },
@@ -12,8 +12,8 @@ module VagrantPlugins
 
       class Main < Vagrant.plugin('2', :command)
         def self.synopsis
-          Openstack.init_i18n
-          I18n.t('vagrant_openstack.command.main_synopsis')
+          Deltacloud.init_i18n
+          I18n.t('vagrant_deltacloud.command.main_synopsis')
         end
 
         def initialize(argv, env)
@@ -32,16 +32,16 @@ module VagrantPlugins
         end
 
         def execute
-          Openstack.init_i18n
+          Deltacloud.init_i18n
           command_class = @commands.get(@sub_command.to_sym) if @sub_command
           return usage unless command_class && @sub_command
           command_class.new(@sub_args, @env).execute(@sub_command)
         end
 
         def usage
-          @env.ui.info I18n.t('vagrant_openstack.command.main_usage')
+          @env.ui.info I18n.t('vagrant_deltacloud.command.main_usage')
           @env.ui.info ''
-          @env.ui.info I18n.t('vagrant_openstack.command.available_subcommands')
+          @env.ui.info I18n.t('vagrant_deltacloud.command.available_subcommands')
           @commands.each do |key, value|
             @env.ui.info "     #{key.to_s.ljust(20)} #{value.synopsis}"
           end

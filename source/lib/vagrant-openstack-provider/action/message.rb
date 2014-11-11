@@ -1,7 +1,7 @@
-require 'vagrant-openstack-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/action/abstract_action'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Action
       class Message < AbstractAction
         def initialize(app, _env, message)

@@ -1,20 +1,20 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::NeutronClient do
+describe VagrantPlugins::Deltacloud::NeutronClient do
 
   let(:env) do
     Hash.new
   end
 
   let(:session) do
-    VagrantPlugins::Openstack.session
+    VagrantPlugins::Deltacloud.session
   end
 
   before :each do
     session.token = '123456'
     session.project_id = 'a1b2c3'
     session.endpoints = { network: 'http://neutron' }
-    @neutron_client = VagrantPlugins::Openstack.neutron
+    @neutron_client = VagrantPlugins::Deltacloud.neutron
   end
 
   describe 'get_private_networks' do

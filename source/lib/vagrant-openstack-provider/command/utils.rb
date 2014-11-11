@@ -1,7 +1,7 @@
 require 'terminal-table'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Command
       module Utils
         def display_item_list(env, items)

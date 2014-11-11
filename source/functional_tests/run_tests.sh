@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export VAGRANT_OPENSTACK_LOG=debug
+export VAGRANT_DELTACLOUD_LOG=debug
 
 export OS_SSH_TIMEOUT=600
 export OS_SYNC_METHOD=none
@@ -78,7 +78,7 @@ runSingleTest() {
 
     logInfo 'START' "${testSummary}"
 
-    bundle exec vagrant up "${machine}" --provider openstack 2>&1 | tee -a "${OS_SERVER_NAME}_up.log"
+    bundle exec vagrant up "${machine}" --provider deltacloud 2>&1 | tee -a "${OS_SERVER_NAME}_up.log"
     if [ "${PIPESTATUS[0]}" -ne 0 ] ; then
         logError 'UP' "${testSummary}"
     else

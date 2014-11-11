@@ -1,16 +1,16 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-include VagrantPlugins::Openstack::Action
-include VagrantPlugins::Openstack::HttpUtils
-include VagrantPlugins::Openstack::Domain
+include VagrantPlugins::Deltacloud::Action
+include VagrantPlugins::Deltacloud::HttpUtils
+include VagrantPlugins::Deltacloud::Domain
 
-describe VagrantPlugins::Openstack::Action::ReadSSHInfo do
+describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
 
   let(:config) do
     double('config').tap do |config|
-      config.stub(:openstack_auth_url) { 'http://keystoneAuthV2' }
-      config.stub(:openstack_compute_url) { nil }
-      config.stub(:openstack_network_url) { nil }
+      config.stub(:deltacloud_auth_url) { 'http://keystoneAuthV2' }
+      config.stub(:deltacloud_compute_url) { nil }
+      config.stub(:deltacloud_network_url) { nil }
       config.stub(:tenant_name) { 'testTenant' }
       config.stub(:username) { 'username' }
       config.stub(:password) { 'password' }
@@ -53,9 +53,9 @@ describe VagrantPlugins::Openstack::Action::ReadSSHInfo do
       env[:machine].stub(:config) { machine_config }
       env[:machine].stub(:id) { '1234' }
       env[:machine].stub(:data_dir) { '/data/dir' }
-      env[:openstack_client] = double('openstack_client')
-      env[:openstack_client].stub(:neutron) { neutron }
-      env[:openstack_client].stub(:nova) { nova }
+      env[:deltacloud_client] = double('deltacloud_client')
+      env[:deltacloud_client].stub(:neutron) { neutron }
+      env[:deltacloud_client].stub(:nova) { nova }
     end
   end
 

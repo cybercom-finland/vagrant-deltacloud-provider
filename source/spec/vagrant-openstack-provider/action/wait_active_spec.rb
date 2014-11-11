@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Action::WaitForServerToBeActive do
+describe VagrantPlugins::Deltacloud::Action::WaitForServerToBeActive do
 
   let(:nova) do
     double('nova')
@@ -12,7 +12,7 @@ describe VagrantPlugins::Openstack::Action::WaitForServerToBeActive do
         ui.stub(:info).with(anything)
         ui.stub(:error).with(anything)
       end
-      env[:openstack_client] = double('openstack_client').tap do |os|
+      env[:deltacloud_client] = double('deltacloud_client').tap do |os|
         os.stub(:nova) { nova }
       end
       env[:machine] = OpenStruct.new.tap do |m|

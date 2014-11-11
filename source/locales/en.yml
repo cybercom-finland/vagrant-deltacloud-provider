@@ -1,12 +1,12 @@
 en:
-  vagrant_openstack:
+  vagrant_deltacloud:
     global_error: |-
-      An unknow error happened in Vagrant OpenStack provider
+      An unknow error happened in Vagrant Deltacloud provider
 
       To easily debug what happened, we recommend to set the environment
-      variable VAGRANT_OPENSTACK_LOG to debug
+      variable VAGRANT_DELTACLOUD_LOG to debug
 
-          $ export VAGRANT_OPENSTACK_LOG=debug
+          $ export VAGRANT_DELTACLOUD_LOG=debug
 
       If doing this does not help fixing your issue, there may be a bug
       in the provider. Please submit an issue on Github at
@@ -56,7 +56,7 @@ en:
     waiting_start: |-
       Waiting for the server to start...
     warn_networks: |-
-      Warning! The Openstack provider doesn't support any of the Vagrant
+      Warning! The Deltacloud provider doesn't support any of the Vagrant
       high-level network configurations (`config.vm.network`). They
       will be silently ignored.
     warn_network_identifier_is_assumed_to_be_an_id: |-
@@ -75,14 +75,14 @@ en:
         Metadata must be a hash.
       keypair_name_required: |-
         Warning! You have specified ssh.private_key_path in your Vagrant configuration.
-        but nor keypair_name neither public_key_path are present. The openstack provider
+        but nor keypair_name neither public_key_path are present. The deltacloud provider
         will automatically generate a new keypair and your configuration option
         ssh.private_key_path will be overriden
       private_key_missing: |-
         config.ssh.private_key_path is required when either keypair_name or
         public_key_path is set in Vagrantfile
       ssh_username_deprecated: |-
-        ssh_username provider config is deprecated for vagrant-openstack provider.
+        ssh_username provider config is deprecated for vagrant-deltacloud provider.
         If you are using it, it will continue to work but we recommend to switch to the
         standard vagrant configuration option `config.ssh.username` instead
       ssh_username_required: |-
@@ -138,11 +138,11 @@ en:
       unrecognized_arg_for_command: |-
         Argument '%{arg}' unrecognized for command '%{cmd}'.
       unable_to_resolve_floating_ip: |-
-        Vagrant was unable to resolve a floating ip to communicate with your OpenStack instance. Please specify in your Vagrantfile either `floating_ip` or `floating_ip_pool`.
+        Vagrant was unable to resolve a floating ip to communicate with your Deltacloud instance. Please specify in your Vagrantfile either `floating_ip` or `floating_ip_pool`.
       unable_to_resolve_ip: |-
-        Vagrant was unable to resolve a valid ip to ssh on your OpenStack instance.
+        Vagrant was unable to resolve a valid ip to ssh on your Deltacloud instance.
       unable_to_resolve_ssh_key: |-
-        Vagrant was unable to resolve a valid ssh key to connect to your OpenStack instance. Please specify in your Vagrantfile either `public_key_path` or `keypair_name`.
+        Vagrant was unable to resolve a valid ssh key to connect to your Deltacloud instance. Please specify in your Vagrantfile either `public_key_path` or `keypair_name`.
       invalid_network_format: |-
         Network '%{network}' is not valid.
       unresolved_network: |-
@@ -174,10 +174,10 @@ en:
       ssh_username_missing: |-
         Vagrant was unable to resolve which ssh username to use to connect to the machine. Please provide config parameter `ssh.username`
       instance_not_found: |-
-        Vagrant was unable to find the OpenStack instance used for your vagrant machine.
-        This can happen when the instance has been deleted via OpenStack APIs or OpenStack
+        Vagrant was unable to find the Deltacloud instance used for your vagrant machine.
+        This can happen when the instance has been deleted via Deltacloud APIs or Deltacloud
         Dashboard instead of using vagrant commands.
-        We recommend using the command `vagrant openstack reset` to reset
+        We recommend using the command `vagrant deltacloud reset` to reset
         vagrant to a clear state
       nerwork_service_unavailable: |-
         Neutron service endpoint is not available, thus there is not way to retrieve
@@ -202,7 +202,7 @@ en:
       short_error: |-
         error
       long_error: |-
-        The server is in an erroneous state. Contact your OpenStack administrator
+        The server is in an erroneous state. Contact your Deltacloud administrator
         or destroy the machine with `vagrant destroy`.
       short_hard_reboot: |-
         hard reboot
@@ -239,10 +239,10 @@ en:
         shutoff
       long_shutoff: |-
         The virtual machine (VM) was powered down by the user, but not through the
-        OpenStack Compute API. For example, the user issued a shutdown -h command
-        from within the server instance. If the OpenStack Compute manager detects
+        Deltacloud Compute API. For example, the user issued a shutdown -h command
+        from within the server instance. If the Deltacloud Compute manager detects
         that the VM was powered down, it transitions the server instance to the
-        SHUTOFF status. If you use the OpenStack Compute API to restart the instance,
+        SHUTOFF status. If you use the Deltacloud Compute API to restart the instance,
         the instance might be deleted first, depending on the value in the
         shutdown_terminate database field on the Instance model.
       short_suspended: |-
@@ -273,9 +273,9 @@ en:
 
     command:
       main_synopsis: |-
-        Openstack provider specific commands
+        Deltacloud provider specific commands
       main_usage : |-
-        Usage: vagrant openstack command
+        Usage: vagrant deltacloud command
       available_subcommands: |-
         Available subcommands:
       image_list_synopsis : |-
@@ -289,4 +289,4 @@ en:
       volume_list_synopsis : |-
         List existing volumes
       reset : |-
-        Reset Vagrant OpenStack provider to a clear state
+        Reset Vagrant Deltacloud provider to a clear state

@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Config do
+describe VagrantPlugins::Deltacloud::Config do
   describe 'defaults' do
     let(:vagrant_public_key) { Vagrant.source_root.join('keys/vagrant.pub') }
 
@@ -11,8 +11,8 @@ describe VagrantPlugins::Openstack::Config do
     end
 
     its(:password)  { should be_nil }
-    its(:openstack_compute_url) { should be_nil }
-    its(:openstack_auth_url) { should be_nil }
+    its(:deltacloud_compute_url) { should be_nil }
+    its(:deltacloud_auth_url) { should be_nil }
     its(:flavor)   { should be_nil }
     its(:image)    { should be_nil }
     its(:server_name) { should be_nil }
@@ -32,8 +32,8 @@ describe VagrantPlugins::Openstack::Config do
   describe 'overriding defaults' do
     [
       :password,
-      :openstack_compute_url,
-      :openstack_auth_url,
+      :deltacloud_compute_url,
+      :deltacloud_auth_url,
       :flavor,
       :image,
       :server_name,
@@ -113,7 +113,7 @@ describe VagrantPlugins::Openstack::Config do
 
   describe 'validation' do
     let(:machine) { double('machine') }
-    let(:validation_errors) { subject.validate(machine)['Openstack Provider'] }
+    let(:validation_errors) { subject.validate(machine)['Deltacloud Provider'] }
     let(:error_message) { double('error message') }
 
     let(:config) { double('config') }
@@ -150,7 +150,7 @@ describe VagrantPlugins::Openstack::Config do
       it 'should raise an error' do
         ssh.stub(:username) { nil }
         subject.ssh_username = nil
-        I18n.should_receive(:t).with('vagrant_openstack.config.ssh_username_required').and_return error_message
+        I18n.should_receive(:t).with('vagrant_deltacloud.config.ssh_username_required').and_return error_message
         validation_errors.first.should == error_message
       end
     end
@@ -166,7 +166,7 @@ describe VagrantPlugins::Openstack::Config do
         it 'should error if not given' do
           ssh.stub(:private_key_path) { nil }
           subject.public_key_path = 'public_key'
-          I18n.should_receive(:t).with('vagrant_openstack.config.private_key_missing').and_return error_message
+          I18n.should_receive(:t).with('vagrant_deltacloud.config.private_key_missing').and_return error_message
           validation_errors.first.should == error_message
         end
       end
@@ -175,7 +175,7 @@ describe VagrantPlugins::Openstack::Config do
     context 'the API key' do
       it 'should error if not given' do
         subject.password = nil
-        I18n.should_receive(:t).with('vagrant_openstack.config.password_required').and_return error_message
+        I18n.should_receive(:t).with('vagrant_deltacloud.config.password_required').and_return error_message
         validation_errors.first.should == error_message
       end
     end
@@ -183,7 +183,7 @@ describe VagrantPlugins::Openstack::Config do
     context 'the username' do
       it 'should error if not given' do
         subject.username = nil
-        I18n.should_receive(:t).with('vagrant_openstack.config.username_required').and_return error_message
+        I18n.should_receive(:t).with('vagrant_deltacloud.config.username_required').and_return error_message
         validation_errors.first.should == error_message
       end
     end
@@ -191,7 +191,7 @@ describe VagrantPlugins::Openstack::Config do
     context 'the ssh_timeout' do
       it 'should error if do not represent an integer' do
         subject.ssh_timeout = 'timeout'
-        I18n.should_receive(:t).with('vagrant_openstack.config.invalid_value_for_parameter',
+        I18n.should_receive(:t).with('vagrant_deltacloud.config.invalid_value_for_parameter',
                                      parameter: 'ssh_timeout', value: 'timeout').and_return error_message
         validation_errors.first.should == error_message
       end
@@ -202,11 +202,11 @@ describe VagrantPlugins::Openstack::Config do
       end
     end
 
-    [:openstack_compute_url, :openstack_auth_url].each do |url|
+    [:deltacloud_compute_url, :deltacloud_auth_url].each do |url|
       context "the #{url}" do
         it 'should not validate if the URL is invalid' do
           subject.send "#{url}=", 'baz'
-          I18n.should_receive(:t).with('vagrant_openstack.config.invalid_uri', key: url, uri: 'baz').and_return error_message
+          I18n.should_receive(:t).with('vagrant_deltacloud.config.invalid_uri', key: url, uri: 'baz').and_return error_message
           validation_errors.first.should == error_message
         end
       end

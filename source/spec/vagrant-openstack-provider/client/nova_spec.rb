@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::NovaClient do
+describe VagrantPlugins::Deltacloud::NovaClient do
   include FakeFS::SpecHelpers::All
 
   let(:filename) { 'key.pub' }
@@ -8,8 +8,8 @@ describe VagrantPlugins::Openstack::NovaClient do
 
   let(:config) do
     double('config').tap do |config|
-      config.stub(:openstack_auth_url) { 'http://novaAuthV2' }
-      config.stub(:openstack_compute_url) { nil }
+      config.stub(:deltacloud_auth_url) { 'http://novaAuthV2' }
+      config.stub(:deltacloud_compute_url) { nil }
       config.stub(:tenant_name) { 'testTenant' }
       config.stub(:username) { 'username' }
       config.stub(:password) { 'password' }
@@ -32,14 +32,14 @@ describe VagrantPlugins::Openstack::NovaClient do
   end
 
   let(:session) do
-    VagrantPlugins::Openstack.session
+    VagrantPlugins::Deltacloud.session
   end
 
   before :each do
     session.token = '123456'
     session.project_id = 'a1b2c3'
     session.endpoints = { compute: 'http://nova/a1b2c3' }
-    @nova_client = VagrantPlugins::Openstack.nova
+    @nova_client = VagrantPlugins::Deltacloud.nova
   end
 
   describe 'instance_exists' do
@@ -58,7 +58,7 @@ describe VagrantPlugins::Openstack::NovaClient do
               status: 404,
               body: '{"itemNotFound": {"message": "Instance could not be found", "code": 404}}')
 
-        expect { @nova_client.start_server(env, 'o1o2o3') }.to raise_error(VagrantPlugins::Openstack::Errors::InstanceNotFound)
+        expect { @nova_client.start_server(env, 'o1o2o3') }.to raise_error(VagrantPlugins::Deltacloud::Errors::InstanceNotFound)
 
       end
     end
@@ -497,7 +497,7 @@ describe VagrantPlugins::Openstack::NovaClient do
                    "name": "new-server-test",
                    "progress": 0,
                    "status": "ACTIVE",
-                   "tenant_id": "openstack",
+                   "tenant_id": "deltacloud",
                    "updated": "2012-08-20T21:11:09Z",
                    "user_id": "fake"
                 }
@@ -508,7 +508,7 @@ describe VagrantPlugins::Openstack::NovaClient do
 
         expect(server['id']).to eq('o1o2o3')
         expect(server['status']).to eq('ACTIVE')
-        expect(server['tenant_id']).to eq('openstack')
+        expect(server['tenant_id']).to eq('deltacloud')
         expect(server['image']['id']).to eq('i1')
         expect(server['flavor']['id']).to eq('1')
 

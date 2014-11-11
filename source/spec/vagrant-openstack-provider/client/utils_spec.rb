@@ -1,8 +1,8 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-include VagrantPlugins::Openstack
+include VagrantPlugins::Deltacloud
 
-describe VagrantPlugins::Openstack::HttpUtils do
+describe VagrantPlugins::Deltacloud::HttpUtils do
 
   let(:keystone) do
     double('keystone').tap do |keystone|
@@ -14,14 +14,14 @@ describe VagrantPlugins::Openstack::HttpUtils do
     Hash.new.tap do |env|
       env[:ui] = double('ui')
       env[:ui].stub(:warn).with(anything)
-      env[:openstack_client] = double('openstack_client')
-      env[:openstack_client].stub(:keystone) { keystone }
+      env[:deltacloud_client] = double('deltacloud_client')
+      env[:deltacloud_client].stub(:keystone) { keystone }
     end
   end
 
   class TestUtils
-    include VagrantPlugins::Openstack::HttpUtils
-    include VagrantPlugins::Openstack::Errors
+    include VagrantPlugins::Deltacloud::HttpUtils
+    include VagrantPlugins::Deltacloud::Errors
 
     attr_writer :logger
 
@@ -112,7 +112,7 @@ describe VagrantPlugins::Openstack::HttpUtils do
     end
 
     context 'response code is 400' do
-      it 'should return raise a VagrantOpenstackError with bad request message' do
+      it 'should return raise a VagrantDeltacloudError with bad request message' do
         mock_resp = double.tap do |mock|
           mock.stub(:code).and_return(400)
           mock.stub(:headers)
@@ -121,14 +121,14 @@ describe VagrantPlugins::Openstack::HttpUtils do
         begin
           @utils.handle_response(mock_resp)
           fail
-        rescue Errors::VagrantOpenstackError => e
+        rescue Errors::VagrantDeltacloudError => e
           expect(e.message).to eq('Error... Bad request')
         end
       end
     end
 
     context 'response code is 404' do
-      it 'should raise a VagrantOpenstackError with conflict message' do
+      it 'should raise a VagrantDeltacloudError with conflict message' do
         mock_resp = double.tap do |mock|
           mock.stub(:code).and_return(404)
           mock.stub(:headers)
@@ -137,14 +137,14 @@ describe VagrantPlugins::Openstack::HttpUtils do
         begin
           @utils.handle_response(mock_resp)
           fail
-        rescue Errors::VagrantOpenstackError => e
+        rescue Errors::VagrantDeltacloudError => e
           expect(e.message).to eq('Error... Not found')
         end
       end
     end
 
     context 'response code is 409' do
-      it 'should return raise a VagrantOpenstackError with conflict message' do
+      it 'should return raise a VagrantDeltacloudError with conflict message' do
         mock_resp = double.tap do |mock|
           mock.stub(:code).and_return(409)
           mock.stub(:headers)
@@ -153,14 +153,14 @@ describe VagrantPlugins::Openstack::HttpUtils do
         begin
           @utils.handle_response(mock_resp)
           fail
-        rescue Errors::VagrantOpenstackError => e
+        rescue Errors::VagrantDeltacloudError => e
           expect(e.message).to eq('Error... Conflict')
         end
       end
     end
 
     context 'response code is 500' do
-      it 'should return raise a VagrantOpenstackError error with error message' do
+      it 'should return raise a VagrantDeltacloudError error with error message' do
         mock_resp = double.tap do |mock|
           mock.stub(:code).and_return(500)
           mock.stub(:headers)
@@ -169,7 +169,7 @@ describe VagrantPlugins::Openstack::HttpUtils do
         begin
           @utils.handle_response(mock_resp)
           fail
-        rescue Errors::VagrantOpenstackError => e
+        rescue Errors::VagrantDeltacloudError => e
           expect(e.message).to eq('Internal server error')
         end
       end

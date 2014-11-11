@@ -3,7 +3,7 @@ require 'restclient'
 require 'json'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module HttpUtils
       module RequestLogger
         def log_request(method, url, body = nil, headers)

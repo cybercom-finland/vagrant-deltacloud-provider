@@ -1,9 +1,9 @@
 require 'vagrant'
 
-require 'vagrant-openstack-provider/action'
+require 'vagrant-deltacloud-provider/action'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class Provider < Vagrant.plugin('2', :provider)
       def initialize(machine)
         @machine = machine
@@ -35,15 +35,15 @@ module VagrantPlugins
         state_id = env[:machine_state_id]
 
         # Get the short and long description
-        short = I18n.t("vagrant_openstack.states.short_#{state_id}")
-        long  = I18n.t("vagrant_openstack.states.long_#{state_id}")
+        short = I18n.t("vagrant_deltacloud.states.short_#{state_id}")
+        long  = I18n.t("vagrant_deltacloud.states.long_#{state_id}")
 
         # Return the MachineState object
         Vagrant::MachineState.new(state_id, short, long)
       end
 
       def to_s
-        'Openstack Cloud'
+        'Deltacloud Cloud'
       end
     end
   end

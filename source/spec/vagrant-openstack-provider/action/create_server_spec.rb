@@ -1,12 +1,12 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 require 'ostruct'
 require 'sshkey'
 
-include VagrantPlugins::Openstack::Action
-include VagrantPlugins::Openstack::HttpUtils
-include VagrantPlugins::Openstack::Domain
+include VagrantPlugins::Deltacloud::Action
+include VagrantPlugins::Deltacloud::HttpUtils
+include VagrantPlugins::Deltacloud::Domain
 
-describe VagrantPlugins::Openstack::Action::CreateServer do
+describe VagrantPlugins::Deltacloud::Action::CreateServer do
 
   let(:config) do
     double('config').tap do |config|
@@ -49,8 +49,8 @@ describe VagrantPlugins::Openstack::Action::CreateServer do
         m.provider_config = config
         m.id = nil
       end
-      env[:openstack_client] = double('openstack_client')
-      env[:openstack_client].stub(:nova) { nova }
+      env[:deltacloud_client] = double('deltacloud_client')
+      env[:deltacloud_client].stub(:nova) { nova }
     end
   end
 

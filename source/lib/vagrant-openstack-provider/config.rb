@@ -2,30 +2,30 @@ require 'vagrant'
 require 'colorize'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class Config < Vagrant.plugin('2', :config)
-      # The API key to access Openstack.
+      # The API key to access Deltacloud.
       #
       attr_accessor :password
 
-      # The compute service url to access Openstack. If nil, it will read from hypermedia catalog form REST API
+      # The compute service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
       #
-      attr_accessor :openstack_compute_url
+      attr_accessor :deltacloud_compute_url
 
-      # The network service url to access Openstack. If nil, it will read from hypermedia catalog form REST API
+      # The network service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
       #
-      attr_accessor :openstack_network_url
+      attr_accessor :deltacloud_network_url
 
-      # The block storage service url to access Openstack. If nil, it will read from hypermedia catalog form REST API
+      # The block storage service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
       #
-      attr_accessor :openstack_volume_url
+      attr_accessor :deltacloud_volume_url
 
-      # The image service url to access Openstack. If nil, it will read from hypermedia catalog form REST API
+      # The image service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
       #
-      attr_accessor :openstack_image_url
+      attr_accessor :deltacloud_image_url
 
-      # The authentication endpoint. This defaults to Openstack's global authentication endpoint.
-      attr_accessor :openstack_auth_url
+      # The authentication endpoint. This defaults to Deltacloud's global authentication endpoint.
+      attr_accessor :deltacloud_auth_url
 
       # The flavor of server to launch, either the ID or name. This
       # can also be a regular expression to partially match a name.
@@ -40,7 +40,7 @@ module VagrantPlugins
       attr_accessor :volume_boot
 
       #
-      # The name of the openstack project on witch the vm will be created.
+      # The name of the deltacloud project on witch the vm will be created.
       #
       attr_accessor :tenant_name
 
@@ -49,7 +49,7 @@ module VagrantPlugins
       # here.
       attr_accessor :server_name
 
-      # The username to access Openstack.
+      # The username to access Deltacloud.
       #
       # @return [String]
       attr_accessor :username
@@ -59,7 +59,7 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :keypair_name
 
-      # The SSH username to use with this OpenStack instance. This overrides
+      # The SSH username to use with this Deltacloud instance. This overrides
       # the `config.ssh.username` variable.
       #
       # @return [String]
@@ -107,7 +107,7 @@ module VagrantPlugins
       # @return [Array]
       attr_accessor :volumes
 
-      # Public key path to create OpenStack keypair
+      # Public key path to create Deltacloud keypair
       #
       # @return [Array]
       attr_accessor :public_key_path
@@ -117,7 +117,7 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :availability_zone
 
-      # Pass hints to the OpenStack scheduler, e.g. { "cell": "some cell name" }
+      # Pass hints to the Deltacloud scheduler, e.g. { "cell": "some cell name" }
       attr_accessor :scheduler_hints
 
       # List of strings representing the security groups to apply.
@@ -126,7 +126,7 @@ module VagrantPlugins
       # @return [Array[String]]
       attr_accessor :security_groups
 
-      # User data to be sent to the newly created OpenStack instance. Use this
+      # User data to be sent to the newly created Deltacloud instance. Use this
       # e.g. to inject a script at boot time.
       #
       # @return [String]
@@ -144,11 +144,11 @@ module VagrantPlugins
 
       def initialize
         @password = UNSET_VALUE
-        @openstack_compute_url = UNSET_VALUE
-        @openstack_network_url = UNSET_VALUE
-        @openstack_volume_url = UNSET_VALUE
-        @openstack_image_url = UNSET_VALUE
-        @openstack_auth_url = UNSET_VALUE
+        @deltacloud_compute_url = UNSET_VALUE
+        @deltacloud_network_url = UNSET_VALUE
+        @deltacloud_volume_url = UNSET_VALUE
+        @deltacloud_image_url = UNSET_VALUE
+        @deltacloud_auth_url = UNSET_VALUE
         @flavor = UNSET_VALUE
         @image = UNSET_VALUE
         @volume_boot = UNSET_VALUE
@@ -207,11 +207,11 @@ module VagrantPlugins
       # rubocop:disable Style/CyclomaticComplexity
       def finalize!
         @password = nil if @password == UNSET_VALUE
-        @openstack_compute_url = nil if @openstack_compute_url == UNSET_VALUE
-        @openstack_network_url = nil if @openstack_network_url == UNSET_VALUE
-        @openstack_volume_url = nil if @openstack_volume_url == UNSET_VALUE
-        @openstack_image_url = nil if @openstack_image_url == UNSET_VALUE
-        @openstack_auth_url = nil if @openstack_auth_url == UNSET_VALUE
+        @deltacloud_compute_url = nil if @deltacloud_compute_url == UNSET_VALUE
+        @deltacloud_network_url = nil if @deltacloud_network_url == UNSET_VALUE
+        @deltacloud_volume_url = nil if @deltacloud_volume_url == UNSET_VALUE
+        @deltacloud_image_url = nil if @deltacloud_image_url == UNSET_VALUE
+        @deltacloud_auth_url = nil if @deltacloud_auth_url == UNSET_VALUE
         @flavor = nil if @flavor == UNSET_VALUE
         @image = nil if @image == UNSET_VALUE
         @volume_boot = nil if @volume_boot == UNSET_VALUE
@@ -248,43 +248,43 @@ module VagrantPlugins
       def validate(machine)
         errors = _detected_errors
 
-        errors << I18n.t('vagrant_openstack.config.password_required') unless @password
-        errors << I18n.t('vagrant_openstack.config.username_required') unless @username
+        errors << I18n.t('vagrant_deltacloud.config.password_required') unless @password
+        errors << I18n.t('vagrant_deltacloud.config.username_required') unless @username
 
         validate_ssh_username(machine, errors)
         validate_ssh_timeout(errors)
 
         if machine.config.ssh.private_key_path
-          puts I18n.t('vagrant_openstack.config.keypair_name_required').yellow unless @keypair_name || @public_key_path
+          puts I18n.t('vagrant_deltacloud.config.keypair_name_required').yellow unless @keypair_name || @public_key_path
         else
-          errors << I18n.t('vagrant_openstack.config.private_key_missing') if @keypair_name || @public_key_path
+          errors << I18n.t('vagrant_deltacloud.config.private_key_missing') if @keypair_name || @public_key_path
         end
 
         {
-          openstack_compute_url: @openstack_compute_url,
-          openstack_network_url: @openstack_network_url,
-          openstack_volume_url: @openstack_volume_url,
-          openstack_image_url: @openstack_image_url,
-          openstack_auth_url: @openstack_auth_url
+          deltacloud_compute_url: @deltacloud_compute_url,
+          deltacloud_network_url: @deltacloud_network_url,
+          deltacloud_volume_url: @deltacloud_volume_url,
+          deltacloud_image_url: @deltacloud_image_url,
+          deltacloud_auth_url: @deltacloud_auth_url
         }.each_pair do |key, value|
-          errors << I18n.t('vagrant_openstack.config.invalid_uri', key: key, uri: value) unless value.nil? || valid_uri?(value)
+          errors << I18n.t('vagrant_deltacloud.config.invalid_uri', key: key, uri: value) unless value.nil? || valid_uri?(value)
         end
 
-        { 'Openstack Provider' => errors }
+        { 'Deltacloud Provider' => errors }
       end
 
       private
 
       def validate_ssh_username(machine, errors)
-        puts I18n.t('vagrant_openstack.config.ssh_username_deprecated').yellow if @ssh_username
-        errors << I18n.t('vagrant_openstack.config.ssh_username_required') unless @ssh_username || machine.config.ssh.username
+        puts I18n.t('vagrant_deltacloud.config.ssh_username_deprecated').yellow if @ssh_username
+        errors << I18n.t('vagrant_deltacloud.config.ssh_username_required') unless @ssh_username || machine.config.ssh.username
       end
 
       def validate_ssh_timeout(errors)
         return if @ssh_timeout.nil? || @ssh_timeout == UNSET_VALUE
         @ssh_timeout = Integer(@ssh_timeout) if @ssh_timeout.is_a? String
       rescue ArgumentError
-        errors << I18n.t('vagrant_openstack.config.invalid_value_for_parameter', parameter: 'ssh_timeout', value: @ssh_timeout)
+        errors << I18n.t('vagrant_deltacloud.config.invalid_value_for_parameter', parameter: 'ssh_timeout', value: @ssh_timeout)
       end
 
       def valid_uri?(value)

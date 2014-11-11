@@ -2,10 +2,10 @@ require 'log4r'
 require 'rbconfig'
 require 'vagrant/util/subprocess'
 
-require 'vagrant-openstack-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/action/abstract_action'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Action
       class SyncFolders < AbstractAction
         def initialize(app, _env)
@@ -43,7 +43,7 @@ module VagrantPlugins
       class RsyncFolders
         def initialize(app, _env)
           @app    = app
-          @logger = Log4r::Logger.new('vagrant_openstack::action::sync_folders')
+          @logger = Log4r::Logger.new('vagrant_deltacloud::action::sync_folders')
           @host_os = RbConfig::CONFIG['host_os']
         end
 
@@ -68,7 +68,7 @@ module VagrantPlugins
               hostpath = add_cygdrive_prefix_to_path(hostpath)
             end
 
-            env[:ui].info(I18n.t('vagrant_openstack.rsync_folder', hostpath: hostpath, guestpath: guestpath))
+            env[:ui].info(I18n.t('vagrant_deltacloud.rsync_folder', hostpath: hostpath, guestpath: guestpath))
 
             # Create the guest path
             env[:machine].communicate.sudo("mkdir -p '#{guestpath}'")

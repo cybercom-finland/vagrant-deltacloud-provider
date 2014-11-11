@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Command::ImageList do
+describe VagrantPlugins::Deltacloud::Command::ImageList do
 
   let(:nova) do
     double('nova').tap do |nova|
@@ -30,14 +30,14 @@ describe VagrantPlugins::Openstack::Command::ImageList do
     Hash.new.tap do |env|
       env[:ui] = double('ui')
       env[:ui].stub(:info).with(anything)
-      env[:openstack_client] = double
-      env[:openstack_client].stub(:nova) { nova }
-      env[:openstack_client].stub(:glance) { glance }
+      env[:deltacloud_client] = double
+      env[:deltacloud_client].stub(:nova) { nova }
+      env[:deltacloud_client].stub(:glance) { glance }
     end
   end
 
   before :each do
-    @image_list_cmd = VagrantPlugins::Openstack::Command::ImageList.new(['--'], env)
+    @image_list_cmd = VagrantPlugins::Deltacloud::Command::ImageList.new(['--'], env)
   end
 
   describe 'cmd' do
@@ -51,7 +51,7 @@ describe VagrantPlugins::Openstack::Command::ImageList do
 
       it 'prints image list with only the id and the name' do
 
-        env[:openstack_client].stub(:session) { session }
+        env[:deltacloud_client].stub(:session) { session }
         allow(@image_list_cmd).to receive(:with_target_vms).and_return(nil)
         nova.should_receive(:get_all_images).with(env)
 
@@ -81,7 +81,7 @@ describe VagrantPlugins::Openstack::Command::ImageList do
 
       it 'prints image list with id, name and details' do
 
-        env[:openstack_client].stub(:session) { session }
+        env[:deltacloud_client].stub(:session) { session }
         allow(@image_list_cmd).to receive(:with_target_vms).and_return(nil)
         glance.should_receive(:get_all_images).with(env)
 

@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Command::Reset do
+describe VagrantPlugins::Deltacloud::Command::Reset do
   describe 'cmd' do
 
     let(:env) do
@@ -13,11 +13,11 @@ describe VagrantPlugins::Openstack::Command::Reset do
     end
 
     before :each do
-      @reset_cmd = VagrantPlugins::Openstack::Command::Reset.new(nil, env)
+      @reset_cmd = VagrantPlugins::Deltacloud::Command::Reset.new(nil, env)
     end
 
-    it 'resets vagrant openstack machines' do
-      expect(env[:ui]).to receive(:info).with('Vagrant OpenStack Provider has been reset')
+    it 'resets vagrant deltacloud machines' do
+      expect(env[:ui]).to receive(:info).with('Vagrant Deltacloud Provider has been reset')
       expect(FileUtils).to receive(:remove_dir).with('/my/data/dir')
       @reset_cmd.cmd('reset', [], env)
     end

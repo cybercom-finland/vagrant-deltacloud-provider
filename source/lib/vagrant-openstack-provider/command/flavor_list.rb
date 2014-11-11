@@ -1,18 +1,18 @@
-require 'vagrant-openstack-provider/command/utils'
-require 'vagrant-openstack-provider/command/abstract_command'
+require 'vagrant-deltacloud-provider/command/utils'
+require 'vagrant-deltacloud-provider/command/abstract_command'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Command
       class FlavorList < AbstractCommand
-        include VagrantPlugins::Openstack::Command::Utils
+        include VagrantPlugins::Deltacloud::Command::Utils
 
         def self.synopsis
-          I18n.t('vagrant_openstack.command.flavor_list_synopsis')
+          I18n.t('vagrant_deltacloud.command.flavor_list_synopsis')
         end
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
-          flavors = env[:openstack_client].nova.get_all_flavors(env)
+          flavors = env[:deltacloud_client].nova.get_all_flavors(env)
 
           rows = []
           flavors.each do |f|

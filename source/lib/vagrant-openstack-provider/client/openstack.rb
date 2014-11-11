@@ -2,14 +2,14 @@ require 'log4r'
 require 'restclient'
 require 'json'
 
-require 'vagrant-openstack-provider/client/keystone'
-require 'vagrant-openstack-provider/client/nova'
-require 'vagrant-openstack-provider/client/neutron'
-require 'vagrant-openstack-provider/client/cinder'
-require 'vagrant-openstack-provider/client/glance'
+require 'vagrant-deltacloud-provider/client/keystone'
+require 'vagrant-deltacloud-provider/client/nova'
+require 'vagrant-deltacloud-provider/client/neutron'
+require 'vagrant-deltacloud-provider/client/cinder'
+require 'vagrant-deltacloud-provider/client/glance'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class Session
       include Singleton
 
@@ -33,23 +33,23 @@ module VagrantPlugins
     end
 
     def self.keystone
-      Openstack::KeystoneClient.instance
+      Deltacloud::KeystoneClient.instance
     end
 
     def self.nova
-      Openstack::NovaClient.instance
+      Deltacloud::NovaClient.instance
     end
 
     def self.neutron
-      Openstack::NeutronClient.instance
+      Deltacloud::NeutronClient.instance
     end
 
     def self.cinder
-      Openstack::CinderClient.instance
+      Deltacloud::CinderClient.instance
     end
 
     def self.glance
-      Openstack::GlanceClient.instance
+      Deltacloud::GlanceClient.instance
     end
   end
 end

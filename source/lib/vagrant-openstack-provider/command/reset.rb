@@ -1,19 +1,19 @@
-require 'vagrant-openstack-provider/command/utils'
-require 'vagrant-openstack-provider/command/abstract_command'
+require 'vagrant-deltacloud-provider/command/utils'
+require 'vagrant-deltacloud-provider/command/abstract_command'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Command
       class Reset < AbstractCommand
-        include VagrantPlugins::Openstack::Command::Utils
+        include VagrantPlugins::Deltacloud::Command::Utils
 
         def self.synopsis
-          I18n.t('vagrant_openstack.command.reset')
+          I18n.t('vagrant_deltacloud.command.reset')
         end
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
           FileUtils.remove_dir("#{env[:machine].data_dir}")
-          env[:ui].info 'Vagrant OpenStack Provider has been reset'
+          env[:ui].info 'Vagrant Deltacloud Provider has been reset'
         end
       end
     end

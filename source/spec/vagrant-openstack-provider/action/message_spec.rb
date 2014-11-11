@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Action::Message do
+describe VagrantPlugins::Deltacloud::Action::Message do
 
   let(:ui) do
     double('ui').tap do |ui|

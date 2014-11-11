@@ -12,14 +12,14 @@ if ENV['COVERAGE'] != 'false'
 end
 
 Dir[
-  'lib/vagrant-openstack-provider/config.rb',
-  'lib/vagrant-openstack-provider/config_resolver.rb',
-  'lib/vagrant-openstack-provider/utils.rb',
-  'lib/vagrant-openstack-provider/errors.rb',
-  'lib/vagrant-openstack-provider/provider.rb',
-  'lib/vagrant-openstack-provider/client/*.rb',
-  'lib/vagrant-openstack-provider/command/*.rb',
-  'lib/vagrant-openstack-provider/action/*.rb'].each { |file| require file[4, file.length - 1] }
+  'lib/vagrant-deltacloud-provider/config.rb',
+  'lib/vagrant-deltacloud-provider/config_resolver.rb',
+  'lib/vagrant-deltacloud-provider/utils.rb',
+  'lib/vagrant-deltacloud-provider/errors.rb',
+  'lib/vagrant-deltacloud-provider/provider.rb',
+  'lib/vagrant-deltacloud-provider/client/*.rb',
+  'lib/vagrant-deltacloud-provider/command/*.rb',
+  'lib/vagrant-deltacloud-provider/action/*.rb'].each { |file| require file[4, file.length - 1] }
 
 require 'rspec/its'
 require 'webmock/rspec'

@@ -3,7 +3,7 @@ require 'restclient'
 require 'json'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Domain
       class Item
         attr_accessor :id, :name

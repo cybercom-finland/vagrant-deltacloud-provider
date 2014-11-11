@@ -1,16 +1,16 @@
 require 'log4r'
 
-require 'vagrant-openstack-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/action/abstract_action'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Action
       # This action reads the state of the machine and puts it in the
       # `:machine_state_id` key in the environment.
       class ReadState < AbstractAction
         def initialize(app, _env)
           @app    = app
-          @logger = Log4r::Logger.new('vagrant_openstack::action::read_state')
+          @logger = Log4r::Logger.new('vagrant_deltacloud::action::read_state')
         end
 
         def execute(env)
@@ -23,7 +23,7 @@ module VagrantPlugins
           return :not_created if machine.id.nil?
 
           # Find the machine
-          server = env[:openstack_client].nova.get_server_details(env, machine.id)
+          server = env[:deltacloud_client].nova.get_server_details(env, machine.id)
           if server.nil? || server['status'] == 'DELETED'
             # The machine can't be found
             @logger.info('Machine not found or deleted, assuming it got destroyed.')

@@ -3,20 +3,20 @@ require 'socket'
 require 'timeout'
 require 'sshkey'
 
-require 'vagrant-openstack-provider/config_resolver'
-require 'vagrant-openstack-provider/utils'
-require 'vagrant-openstack-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/config_resolver'
+require 'vagrant-deltacloud-provider/utils'
+require 'vagrant-deltacloud-provider/action/abstract_action'
 require 'vagrant/util/retryable'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Action
       class CreateServer < AbstractAction
         include Vagrant::Util::Retryable
 
         def initialize(app, _env, resolver = ConfigResolver.new, utils = Utils.new)
           @app = app
-          @logger = Log4r::Logger.new('vagrant_openstack::action::create_server')
+          @logger = Log4r::Logger.new('vagrant_deltacloud::action::create_server')
           @resolver = resolver
           @utils = utils
         end
@@ -59,10 +59,10 @@ module VagrantPlugins
 
         def create_server(env, options)
           config = env[:machine].provider_config
-          nova = env[:openstack_client].nova
+          nova = env[:deltacloud_client].nova
           server_name = config.server_name || env[:machine].name
 
-          env[:ui].info(I18n.t('vagrant_openstack.launching_server'))
+          env[:ui].info(I18n.t('vagrant_deltacloud.launching_server'))
           env[:ui].info(" -- Tenant          : #{config.tenant_name}")
           env[:ui].info(" -- Name            : #{server_name}")
           env[:ui].info(" -- Flavor          : #{options[:flavor].name}")
@@ -129,12 +129,12 @@ module VagrantPlugins
 
         def waiting_for_server_to_be_built(env, server_id, retry_interval = 3, timeout = 200)
           @logger.info "Waiting for the server with id #{server_id} to be built..."
-          env[:ui].info(I18n.t('vagrant_openstack.waiting_for_build'))
+          env[:ui].info(I18n.t('vagrant_deltacloud.waiting_for_build'))
           timeout(timeout, Errors::Timeout) do
             server_status = 'WAITING'
             until server_status == 'ACTIVE'
               @logger.debug('Waiting for server to be ACTIVE')
-              server_status = env[:openstack_client].nova.get_server_details(env, server_id)['status']
+              server_status = env[:deltacloud_client].nova.get_server_details(env, server_id)['status']
               fail Errors::ServerStatusError, server: server_id if server_status == 'ERROR'
               sleep retry_interval
             end
@@ -145,8 +145,8 @@ module VagrantPlugins
           floating_ip = @resolver.resolve_floating_ip(env)
           return if !floating_ip || floating_ip.empty?
           @logger.info "Using floating IP #{floating_ip}"
-          env[:ui].info(I18n.t('vagrant_openstack.using_floating_ip', floating_ip: floating_ip))
-          env[:openstack_client].nova.add_floating_ip(env, server_id, floating_ip)
+          env[:ui].info(I18n.t('vagrant_deltacloud.using_floating_ip', floating_ip: floating_ip))
+          env[:deltacloud_client].nova.add_floating_ip(env, server_id, floating_ip)
         rescue Errors::UnableToResolveFloatingIP
           @logger.info 'Vagrant was unable to resolve FloatingIP, continue assuming it is not necessary'
         end
@@ -155,7 +155,7 @@ module VagrantPlugins
           @logger.info("Attaching volumes #{volumes} to server #{server_id}")
           volumes.each do |volume|
             @logger.debug("Attaching volumes #{volume}")
-            env[:openstack_client].nova.attach_volume(env, server_id, volume[:id], volume[:device])
+            env[:deltacloud_client].nova.attach_volume(env, server_id, volume[:id], volume[:device])
           end
         end
       end

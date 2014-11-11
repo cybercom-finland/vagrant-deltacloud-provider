@@ -2,19 +2,19 @@ require 'log4r'
 require 'restclient'
 require 'json'
 
-require 'vagrant-openstack-provider/client/http_utils'
-require 'vagrant-openstack-provider/client/domain'
+require 'vagrant-deltacloud-provider/client/http_utils'
+require 'vagrant-deltacloud-provider/client/domain'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class NovaClient
       include Singleton
-      include VagrantPlugins::Openstack::HttpUtils
-      include VagrantPlugins::Openstack::Domain
+      include VagrantPlugins::Deltacloud::HttpUtils
+      include VagrantPlugins::Deltacloud::Domain
 
       def initialize
-        @logger = Log4r::Logger.new('vagrant_openstack::nova')
-        @session = VagrantPlugins::Openstack.session
+        @logger = Log4r::Logger.new('vagrant_deltacloud::nova')
+        @session = VagrantPlugins::Deltacloud.session
       end
 
       def get_all_flavors(env)
@@ -177,7 +177,7 @@ module VagrantPlugins
 
       def instance_exists
         return yield
-      rescue Errors::VagrantOpenstackError => e
+      rescue Errors::VagrantDeltacloudError => e
         raise Errors::InstanceNotFound if e.extra_data[:code] == 404
         raise e
       end

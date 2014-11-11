@@ -1,20 +1,20 @@
-require 'vagrant-openstack-provider/command/utils'
-require 'vagrant-openstack-provider/command/abstract_command'
+require 'vagrant-deltacloud-provider/command/utils'
+require 'vagrant-deltacloud-provider/command/abstract_command'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Command
       class FloatingIpList < AbstractCommand
-        include VagrantPlugins::Openstack::Command::Utils
+        include VagrantPlugins::Deltacloud::Command::Utils
 
         def self.synopsis
-          I18n.t('vagrant_openstack.command.flaotingip_list_synopsis')
+          I18n.t('vagrant_deltacloud.command.flaotingip_list_synopsis')
         end
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
 
-          floating_ip_pools = env[:openstack_client].nova.get_floating_ip_pools(env)
-          floating_ips = env[:openstack_client].nova.get_floating_ips(env)
+          floating_ip_pools = env[:deltacloud_client].nova.get_floating_ip_pools(env)
+          floating_ips = env[:deltacloud_client].nova.get_floating_ips(env)
 
           rows = []
           floating_ip_pools.each do |floating_ip_pool|

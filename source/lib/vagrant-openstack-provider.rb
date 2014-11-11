@@ -1,10 +1,10 @@
 require 'pathname'
 
-require 'vagrant-openstack-provider/plugin'
+require 'vagrant-deltacloud-provider/plugin'
 
 module VagrantPlugins
-  module Openstack
-    lib_path = Pathname.new(File.expand_path('../vagrant-openstack-provider', __FILE__))
+  module Deltacloud
+    lib_path = Pathname.new(File.expand_path('../vagrant-deltacloud-provider', __FILE__))
     autoload :Errors, lib_path.join('errors')
 
     # This initializes the i18n load path so that the plugin-specific
@@ -26,7 +26,7 @@ module VagrantPlugins
         # which is fine. We just keep `level` as `nil`. But
         # we tell the user.
         begin
-          level = Log4r.const_get(ENV['VAGRANT_OPENSTACK_LOG'].upcase)
+          level = Log4r.const_get(ENV['VAGRANT_DELTACLOUD_LOG'].upcase)
         rescue NameError
           level = nil
         end
@@ -40,7 +40,7 @@ module VagrantPlugins
       # Set the logging level
       # logs as long as we have a valid level.
       if level
-        logger = Log4r::Logger.new('vagrant_openstack')
+        logger = Log4r::Logger.new('vagrant_deltacloud')
         out = Log4r::Outputter.stdout
         out.formatter = Log4r::PatternFormatter.new(pattern: '%d | %5l | %m', date_pattern: '%Y-%m-%d %H:%M')
         logger.outputters = out

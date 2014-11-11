@@ -1,7 +1,7 @@
-require 'vagrant-openstack-provider/client/openstack'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Command
       class AbstractCommand < Vagrant.plugin('2', :command)
         def initialize(argv, env)
@@ -11,20 +11,20 @@ module VagrantPlugins
 
         def execute(name)
           env = {}
-          with_target_vms(nil, provider: :openstack) do |machine|
+          with_target_vms(nil, provider: :deltacloud) do |machine|
             env[:machine] = machine
             env[:ui] = @env.ui
           end
 
-          VagrantPlugins::Openstack::Action::ConnectOpenstack.new(nil, env).call(env)
+          VagrantPlugins::Deltacloud::Action::ConnectDeltacloud.new(nil, env).call(env)
 
           cmd(name, @argv, env)
           @env.ui.info('')
         # rubocop:disable Lint/RescueException
-        rescue Errors::VagrantOpenstackError => e
+        rescue Errors::VagrantDeltacloudError => e
           raise e
         rescue Exception => e
-          puts I18n.t('vagrant_openstack.global_error').red unless e.message && e.message.start_with?('Catched Error:')
+          puts I18n.t('vagrant_deltacloud.global_error').red unless e.message && e.message.start_with?('Catched Error:')
           raise e
         end
         # rubocop:enable Lint/RescueException

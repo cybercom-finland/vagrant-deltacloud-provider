@@ -1,8 +1,8 @@
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class ConfigResolver
       def initialize
-        @logger = Log4r::Logger.new('vagrant_openstack::action::config_resolver')
+        @logger = Log4r::Logger.new('vagrant_deltacloud::action::config_resolver')
       end
 
       def resolve_ssh_port(env)
@@ -14,8 +14,8 @@ module VagrantPlugins
       def resolve_flavor(env)
         @logger.info 'Resolving flavor'
         config = env[:machine].provider_config
-        nova = env[:openstack_client].nova
-        env[:ui].info(I18n.t('vagrant_openstack.finding_flavor'))
+        nova = env[:deltacloud_client].nova
+        env[:ui].info(I18n.t('vagrant_deltacloud.finding_flavor'))
         flavors = nova.get_all_flavors(env)
         @logger.info "Finding flavor matching name '#{config.flavor}'"
         flavor = find_matching(flavors, config.flavor)
@@ -27,8 +27,8 @@ module VagrantPlugins
         @logger.info 'Resolving image'
         config = env[:machine].provider_config
         return nil if config.image.nil?
-        nova = env[:openstack_client].nova
-        env[:ui].info(I18n.t('vagrant_openstack.finding_image'))
+        nova = env[:deltacloud_client].nova
+        env[:ui].info(I18n.t('vagrant_deltacloud.finding_image'))
         images = nova.get_all_images(env)
         @logger.info "Finding image matching name '#{config.image}'"
         image = find_matching(images, config.image)
@@ -38,7 +38,7 @@ module VagrantPlugins
 
       def resolve_floating_ip(env)
         config = env[:machine].provider_config
-        nova = env[:openstack_client].nova
+        nova = env[:deltacloud_client].nova
         return config.floating_ip if config.floating_ip
         fail Errors::UnableToResolveFloatingIP unless config.floating_ip_pool
         nova.get_all_floating_ips(env).each do |single|
@@ -49,7 +49,7 @@ module VagrantPlugins
 
       def resolve_keypair(env)
         config = env[:machine].provider_config
-        nova = env[:openstack_client].nova
+        nova = env[:deltacloud_client].nova
         return config.keypair_name if config.keypair_name
         return nova.import_keypair_from_file(env, config.public_key_path) if config.public_key_path
         generate_keypair(env)
@@ -59,10 +59,10 @@ module VagrantPlugins
         @logger.info 'Resolving network(s)'
         config = env[:machine].provider_config
         return [] if config.networks.nil? || config.networks.empty?
-        env[:ui].info(I18n.t('vagrant_openstack.finding_networks'))
-        return resolve_networks_without_network_service(env) unless env[:openstack_client].session.endpoints.key? :network
+        env[:ui].info(I18n.t('vagrant_deltacloud.finding_networks'))
+        return resolve_networks_without_network_service(env) unless env[:deltacloud_client].session.endpoints.key? :network
 
-        all_networks = env[:openstack_client].neutron.get_all_networks(env)
+        all_networks = env[:deltacloud_client].neutron.get_all_networks(env)
         all_network_ids = all_networks.map { |v| v.id }
 
         networks = []
@@ -77,9 +77,9 @@ module VagrantPlugins
         @logger.info 'Resolving image'
         config = env[:machine].provider_config
         return nil if config.volume_boot.nil?
-        return resolve_volume_without_volume_service(env, config.volume_boot, 'vda') unless env[:openstack_client].session.endpoints.key? :volume
+        return resolve_volume_without_volume_service(env, config.volume_boot, 'vda') unless env[:deltacloud_client].session.endpoints.key? :volume
 
-        volume_list = env[:openstack_client].cinder.get_all_volumes(env)
+        volume_list = env[:deltacloud_client].cinder.get_all_volumes(env)
         volume_ids = volume_list.map { |v| v.id }
 
         @logger.debug(volume_list)
@@ -94,10 +94,10 @@ module VagrantPlugins
         @logger.info 'Resolving volume(s)'
         config = env[:machine].provider_config
         return [] if config.volumes.nil? || config.volumes.empty?
-        env[:ui].info(I18n.t('vagrant_openstack.finding_volumes'))
-        return resolve_volumes_without_volume_service(env) unless env[:openstack_client].session.endpoints.key? :volume
+        env[:ui].info(I18n.t('vagrant_deltacloud.finding_volumes'))
+        return resolve_volumes_without_volume_service(env) unless env[:deltacloud_client].session.endpoints.key? :volume
 
-        volume_list = env[:openstack_client].cinder.get_all_volumes(env)
+        volume_list = env[:deltacloud_client].cinder.get_all_volumes(env)
         volume_ids = volume_list.map { |v| v.id }
 
         @logger.debug(volume_list)
@@ -135,7 +135,7 @@ module VagrantPlugins
 
       def generate_keypair(env)
         key = SSHKey.generate
-        nova = env[:openstack_client].nova
+        nova = env[:deltacloud_client].nova
         generated_keyname = nova.import_keypair(env, key.ssh_public_key)
         file_path = "#{env[:machine].data_dir}/#{generated_keyname}"
         File.write(file_path, key.private_key)
@@ -149,7 +149,7 @@ module VagrantPlugins
         config.networks.each do |network|
           case network
           when String
-            env[:ui].info(I18n.t('vagrant_openstack.warn_network_identifier_is_assumed_to_be_an_id', network: network))
+            env[:ui].info(I18n.t('vagrant_deltacloud.warn_network_identifier_is_assumed_to_be_an_id', network: network))
             networks << { uuid: network }
           when Hash
             fail Errors::ConflictNetworkNameId, network: network if network.key?(:name) && network.key?(:id)
@@ -202,7 +202,7 @@ module VagrantPlugins
       def resolve_volume_without_volume_service(env, volume, default_device = nil)
         case volume
         when String
-          env[:ui].info(I18n.t('vagrant_openstack.warn_volume_identifier_is_assumed_to_be_an_id', volume: volume))
+          env[:ui].info(I18n.t('vagrant_deltacloud.warn_volume_identifier_is_assumed_to_be_an_id', volume: volume))
           return { id: volume, device: default_device }
         when Hash
           fail Errors::ConflictVolumeNameId, volume: volume if volume.key?(:name) && volume.key?(:id)

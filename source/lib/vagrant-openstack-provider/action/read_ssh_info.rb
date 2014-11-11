@@ -1,11 +1,11 @@
 require 'log4r'
 
-require 'vagrant-openstack-provider/config_resolver'
-require 'vagrant-openstack-provider/utils'
-require 'vagrant-openstack-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/config_resolver'
+require 'vagrant-deltacloud-provider/utils'
+require 'vagrant-deltacloud-provider/action/abstract_action'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module Action
       # This action reads the SSH info for the machine and puts it into the
       # `:machine_ssh_info` key in the environment.
@@ -13,7 +13,7 @@ module VagrantPlugins
       class ReadSSHInfo < AbstractAction
         def initialize(app, _env, resolver = ConfigResolver.new, utils = Utils.new)
           @app    = app
-          @logger = Log4r::Logger.new('vagrant_openstack::action::read_ssh_info')
+          @logger = Log4r::Logger.new('vagrant_deltacloud::action::read_ssh_info')
           @resolver = resolver
           @utils = utils
         end
@@ -47,7 +47,7 @@ module VagrantPlugins
         end
 
         def get_keypair_name(env)
-          env[:openstack_client].nova.get_server_details(env, env[:machine].id)['key_name']
+          env[:deltacloud_client].nova.get_server_details(env, env[:machine].id)['key_name']
         end
       end
 

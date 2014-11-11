@@ -1,11 +1,11 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 require 'log4r'
 require 'rbconfig'
 require 'vagrant/util/subprocess'
 
-include VagrantPlugins::Openstack::Action
+include VagrantPlugins::Deltacloud::Action
 
-describe VagrantPlugins::Openstack::Action::SyncFolders do
+describe VagrantPlugins::Deltacloud::Action::SyncFolders do
 
   let(:app) do
     double('app').tap do |app|
@@ -38,7 +38,7 @@ describe VagrantPlugins::Openstack::Action::SyncFolders do
         ui.stub(:info).with(anything)
         ui.stub(:error).with(anything)
       end
-      env[:openstack_client] = double('openstack_client').tap do |os|
+      env[:deltacloud_client] = double('deltacloud_client').tap do |os|
         os.stub(:nova) { nova }
       end
       env[:machine] = OpenStruct.new.tap do |m|

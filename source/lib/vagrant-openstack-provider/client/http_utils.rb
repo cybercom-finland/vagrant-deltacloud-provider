@@ -2,13 +2,13 @@ require 'log4r'
 require 'restclient'
 require 'json'
 
-require 'vagrant-openstack-provider/client/keystone'
-require 'vagrant-openstack-provider/client/request_logger'
+require 'vagrant-deltacloud-provider/client/keystone'
+require 'vagrant-deltacloud-provider/client/request_logger'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     module HttpUtils
-      include VagrantPlugins::Openstack::HttpUtils::RequestLogger
+      include VagrantPlugins::Deltacloud::HttpUtils::RequestLogger
 
       def get(env, url, headers = {})
         calling_method = caller[0][/`.*'/][1..-2]
@@ -73,9 +73,9 @@ module VagrantPlugins
           fail Errors::AuthenticationRequired
         when 400, 404, 409
           message = JSON.parse(response.to_s)[ERRORS[response.code.to_s]]['message']
-          fail Errors::VagrantOpenstackError, message: message, code: response.code
+          fail Errors::VagrantDeltacloudError, message: message, code: response.code
         else
-          fail Errors::VagrantOpenstackError, message: response.to_s, code: response.code
+          fail Errors::VagrantDeltacloudError, message: response.to_s, code: response.code
         end
       end
 
@@ -86,8 +86,8 @@ module VagrantPlugins
         rescue Errors::AuthenticationRequired => e
           nb_retry += 1
           env[:ui].warn(e)
-          env[:ui].warn(I18n.t('vagrant_openstack.trying_authentication'))
-          env[:openstack_client].keystone.authenticate(env)
+          env[:ui].warn(I18n.t('vagrant_deltacloud.trying_authentication'))
+          env[:deltacloud_client].keystone.authenticate(env)
           retry if nb_retry < 3
           raise e
         end

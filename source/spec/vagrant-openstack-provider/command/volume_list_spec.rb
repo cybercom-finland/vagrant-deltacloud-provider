@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Command::VolumeList do
+describe VagrantPlugins::Deltacloud::Command::VolumeList do
   describe 'cmd' do
 
     let(:cinder) do
@@ -16,13 +16,13 @@ describe VagrantPlugins::Openstack::Command::VolumeList do
       Hash.new.tap do |env|
         env[:ui] = double('ui')
         env[:ui].stub(:info).with(anything)
-        env[:openstack_client] = double
-        env[:openstack_client].stub(:cinder) { cinder }
+        env[:deltacloud_client] = double
+        env[:deltacloud_client].stub(:cinder) { cinder }
       end
     end
 
     before :each do
-      @volume_list_cmd = VagrantPlugins::Openstack::Command::VolumeList.new(nil, env)
+      @volume_list_cmd = VagrantPlugins::Deltacloud::Command::VolumeList.new(nil, env)
     end
 
     it 'prints volumes list from server' do

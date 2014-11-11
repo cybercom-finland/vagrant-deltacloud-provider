@@ -1,13 +1,13 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Provider do
+describe VagrantPlugins::Deltacloud::Provider do
   before :each do
-    @provider = VagrantPlugins::Openstack::Provider.new :machine
+    @provider = VagrantPlugins::Deltacloud::Provider.new :machine
   end
 
   describe 'to string' do
     it 'should give the provider name' do
-      @provider.to_s.should eq('Openstack Cloud')
+      @provider.to_s.should eq('Deltacloud Cloud')
     end
   end
 end

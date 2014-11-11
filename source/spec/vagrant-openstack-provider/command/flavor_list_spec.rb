@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Command::FlavorList do
+describe VagrantPlugins::Deltacloud::Command::FlavorList do
   describe 'cmd' do
 
     let(:nova) do
@@ -18,13 +18,13 @@ describe VagrantPlugins::Openstack::Command::FlavorList do
       Hash.new.tap do |env|
         env[:ui] = double('ui')
         env[:ui].stub(:info).with(anything)
-        env[:openstack_client] = double
-        env[:openstack_client].stub(:nova) { nova }
+        env[:deltacloud_client] = double
+        env[:deltacloud_client].stub(:nova) { nova }
       end
     end
 
     before :each do
-      @flavor_list_cmd = VagrantPlugins::Openstack::Command::FlavorList.new(nil, env)
+      @flavor_list_cmd = VagrantPlugins::Deltacloud::Command::FlavorList.new(nil, env)
     end
 
     it 'prints flovor list from server' do

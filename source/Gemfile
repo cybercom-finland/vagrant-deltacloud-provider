@@ -14,5 +14,5 @@ group :debug do
 end
 
 group :plugins do
-  gem "vagrant-openstack-provider", path: "."
+  gem "vagrant-deltacloud-provider", path: "."
 end

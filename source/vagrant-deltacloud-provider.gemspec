@@ -1,15 +1,15 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'vagrant-openstack-provider/version'
+require 'vagrant-deltacloud-provider/version'
 
 Gem::Specification.new do |gem|
-  gem.name          = 'vagrant-openstack-provider'
-  gem.version       = VagrantPlugins::Openstack::VERSION
-  gem.authors       = ['Guillaume Giamarchi', 'Julien Vey']
-  gem.email         = ['guillaume.giamarchi@gmail.com', 'vey.julien@gmail.com']
-  gem.description   = 'Enables Vagrant to manage machines in Openstack Cloud.'
-  gem.summary       = 'Enables Vagrant to manage machines in Openstack Cloud.'
-  gem.homepage      = 'https://github.com/ggiamarchi/vagrant-openstack-provider'
+  gem.name          = 'vagrant-deltacloud-provider'
+  gem.version       = VagrantPlugins::Deltacloud::VERSION
+  gem.authors       = ['Tero Keski-Valkama']
+  gem.email         = ['tero.keski-valkama@cybercom.com']
+  gem.description   = 'Enables Vagrant to manage machines in Deltacloud Cloud.'
+  gem.summary       = 'Enables Vagrant to manage machines in Deltacloud Cloud.'
+  gem.homepage      = 'https://github.com/cybercom-finland/vagrant-deltacloud-provider'
 
   gem.add_dependency 'json', '1.7.7'
   gem.add_dependency 'rest-client', '~> 1.6.0'

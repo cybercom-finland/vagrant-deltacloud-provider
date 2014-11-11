@@ -1,6 +1,6 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::Utils do
+describe VagrantPlugins::Deltacloud::Utils do
 
   let(:config) do
     double('config').tap do |config|
@@ -23,8 +23,8 @@ describe VagrantPlugins::Openstack::Utils do
       env[:machine] = double('machine')
       env[:machine].stub(:provider_config) { config }
       env[:machine].stub(:id) { '1234id' }
-      env[:openstack_client] = double('openstack_client')
-      env[:openstack_client].stub(:nova) { nova }
+      env[:deltacloud_client] = double('deltacloud_client')
+      env[:deltacloud_client].stub(:nova) { nova }
     end
   end
 

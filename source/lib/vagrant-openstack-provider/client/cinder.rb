@@ -2,19 +2,19 @@ require 'log4r'
 require 'restclient'
 require 'json'
 
-require 'vagrant-openstack-provider/client/http_utils'
-require 'vagrant-openstack-provider/client/domain'
+require 'vagrant-deltacloud-provider/client/http_utils'
+require 'vagrant-deltacloud-provider/client/domain'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class CinderClient
       include Singleton
-      include VagrantPlugins::Openstack::HttpUtils
-      include VagrantPlugins::Openstack::Domain
+      include VagrantPlugins::Deltacloud::HttpUtils
+      include VagrantPlugins::Deltacloud::Domain
 
       def initialize
-        @logger = Log4r::Logger.new('vagrant_openstack::cinder')
-        @session = VagrantPlugins::Openstack.session
+        @logger = Log4r::Logger.new('vagrant_deltacloud::cinder')
+        @session = VagrantPlugins::Deltacloud.session
       end
 
       def get_all_volumes(env)

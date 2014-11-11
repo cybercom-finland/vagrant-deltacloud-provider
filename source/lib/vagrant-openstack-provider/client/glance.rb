@@ -2,19 +2,19 @@ require 'log4r'
 require 'restclient'
 require 'json'
 
-require 'vagrant-openstack-provider/client/http_utils'
-require 'vagrant-openstack-provider/client/domain'
+require 'vagrant-deltacloud-provider/client/http_utils'
+require 'vagrant-deltacloud-provider/client/domain'
 
 module VagrantPlugins
-  module Openstack
+  module Deltacloud
     class GlanceClient
       include Singleton
-      include VagrantPlugins::Openstack::HttpUtils
-      include VagrantPlugins::Openstack::Domain
+      include VagrantPlugins::Deltacloud::HttpUtils
+      include VagrantPlugins::Deltacloud::Domain
 
       def initialize
-        @logger = Log4r::Logger.new('vagrant_openstack::glance')
-        @session = VagrantPlugins::Openstack.session
+        @logger = Log4r::Logger.new('vagrant_deltacloud::glance')
+        @session = VagrantPlugins::Deltacloud.session
       end
 
       def get_api_version_list(_env)
@@ -26,7 +26,7 @@ module VagrantPlugins
           when 401
             fail Errors::AuthenticationFailed
           else
-            fail Errors::VagrantOpenstackError, message: response.to_s
+            fail Errors::VagrantDeltacloudError, message: response.to_s
           end
         end
         JSON.parse(json)['versions']

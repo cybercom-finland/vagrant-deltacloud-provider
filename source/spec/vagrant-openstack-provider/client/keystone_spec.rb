@@ -1,12 +1,12 @@
-require 'vagrant-openstack-provider/spec_helper'
+require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Openstack::KeystoneClient do
+describe VagrantPlugins::Deltacloud::KeystoneClient do
 
   let(:config) do
     double('config').tap do |config|
-      config.stub(:openstack_auth_url) { 'http://keystoneAuthV2' }
-      config.stub(:openstack_compute_url) { nil }
-      config.stub(:openstack_network_url) { nil }
+      config.stub(:deltacloud_auth_url) { 'http://keystoneAuthV2' }
+      config.stub(:deltacloud_compute_url) { nil }
+      config.stub(:deltacloud_network_url) { nil }
       config.stub(:tenant_name) { 'testTenant' }
       config.stub(:username) { 'username' }
       config.stub(:password) { 'password' }
@@ -23,7 +23,7 @@ describe VagrantPlugins::Openstack::KeystoneClient do
   end
 
   let(:session) do
-    VagrantPlugins::Openstack.session
+    VagrantPlugins::Deltacloud.session
   end
 
   describe 'authenticate' do
@@ -47,7 +47,7 @@ describe VagrantPlugins::Openstack::KeystoneClient do
     end
 
     before :each do
-      @keystone_client = VagrantPlugins::Openstack.keystone
+      @keystone_client = VagrantPlugins::Deltacloud.keystone
     end
 
     context 'with good credentials' do
@@ -103,7 +103,7 @@ describe VagrantPlugins::Openstack::KeystoneClient do
     end
 
     context 'with internal server error' do
-      it 'raise a VagrantOpenstackError error with response body as message' do
+      it 'raise a VagrantDeltacloudError error with response body as message' do
         stub_request(:post, 'http://keystoneAuthV2')
         .with(
             body: keystone_request_body,
@@ -114,8 +114,8 @@ describe VagrantPlugins::Openstack::KeystoneClient do
 
         begin
           @keystone_client.authenticate(env)
-          fail 'Expected Errors::VagrantOpenstackError'
-        rescue Errors::VagrantOpenstackError => e
+          fail 'Expected Errors::VagrantDeltacloudError'
+        rescue Errors::VagrantDeltacloudError => e
           e.message.should eq('Internal server error')
         end
       end
