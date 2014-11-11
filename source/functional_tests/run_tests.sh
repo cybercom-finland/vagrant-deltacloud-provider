@@ -11,6 +11,8 @@ export OS_IMAGE=
 
 ERROR_STATE=0
 
+#TODO(Customize the tests to work with Cybercom Cloud)
+
 cat > /tmp/images_with_ssh_user <<EOL
 ubuntu-12.04_x86_64_HWE;stack
 ubuntu-14.04_x86_64_LVM;stack
