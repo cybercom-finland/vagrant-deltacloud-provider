@@ -20,6 +20,25 @@ describe VagrantPlugins::Deltacloud::Action::ConnectDeltacloud do
     end
   end
 
+  let(:deltacloud) do
+    double.tap do |deltacloud|
+      deltacloud.stub(:get_api_version_list).with(anything) do
+        [
+          {
+            'status' => 'CURRENT',
+            'id' => 'v2.0',
+            'links' => [
+              {
+                'href' => 'https://standard.fi-central.cybercomcloud.com/api',
+                'rel' => 'self'
+              }
+            ]
+          }
+        ]
+      end
+    end
+  end
+
   let(:env) do
     Hash.new.tap do |env|
       env[:ui] = double
