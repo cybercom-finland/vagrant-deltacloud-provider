@@ -86,5 +86,9 @@ module VagrantPlugins
       response = delete(env, "/images/" + image_id)
       JSON.parse(response)
     end
+    def list_networks(env)
+      response = get(env, "/networks")
+      JSON.parse(response)
+    end
   end
 end
