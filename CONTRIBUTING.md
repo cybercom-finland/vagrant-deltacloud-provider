@@ -7,12 +7,12 @@ The following guidelines for contribution should be followed if you want to subm
 ## How to prepare
 
 * You need a [GitHub account](https://github.com/signup/free)
-* Submit an [issue ticket](https://github.com/ggiamarchi/vagrant-openstack-provider/issues) for your issue if there is none yet.
+* Submit an [issue ticket](https://github.com/cybercom-finland/vagrant-deltacloud-provider/issues) for your issue if there is none yet.
 	* Describe the issue and include steps to reproduce when it's a bug.
 	* Ensure to mention the earliest version that you know is affected, as well as the vagrant version you are using
   * If you plan on submitting a bug report, please submit debug-level logs along
     with the report using [gist](https://gist.github.com/) or some other paste
-    service by prepending `VAGRANT_OPENSTACK_LOG=debug` to your `vagrant` commands.
+    service by prepending `VAGRANT_DELTACLOUD_LOG=debug` to your `vagrant` commands.
 * Fork the repository on GitHub
 
 ## Make Changes
