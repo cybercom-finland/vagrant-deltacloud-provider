@@ -1,45 +1,37 @@
-# Vagrant Openstack Cloud Provider
+# Vagrant DeltaCloud Cloud Provider
 
-[![Build Status](https://api.travis-ci.org/ggiamarchi/vagrant-openstack-provider.png?branch=master)](https://travis-ci.org/ggiamarchi/vagrant-openstack-provider)
-[![Gem Version](https://badge.fury.io/rb/vagrant-openstack-provider.svg)](http://badge.fury.io/rb/vagrant-openstack-provider)
-[![Code Climate](https://codeclimate.com/github/ggiamarchi/vagrant-openstack-provider.png)](https://codeclimate.com/github/ggiamarchi/vagrant-openstack-provider)
-[![Coverage Status](https://coveralls.io/repos/ggiamarchi/vagrant-openstack-provider/badge.png?branch=master)](https://coveralls.io/r/ggiamarchi/vagrant-openstack-provider?branch=master)
+**WORK IN PROGRESS**
 
 This is a [Vagrant](http://www.vagrantup.com) 1.4+ plugin that adds a
-[Openstack Cloud](http://www.openstack.org/software/) provider to Vagrant,
-allowing Vagrant to control and provision machines within Openstack
+[DeltaCloud](https://deltacloud.apache.org/) provider to Vagrant,
+allowing Vagrant to control and provision machines within DeltaCloud
 cloud.
 
-**Note:** This plugin was originally forked from [mitchellh/vagrant-rackspace](https://github.com/mitchellh/vagrant-rackspace)
+**Note:** This plugin was originally forked from [https://github.com/ggiamarchi/vagrant-openstack-provider](https://github.com/ggiamarchi/vagrant-openstack-provider)
 
 ## Features
 
-* Create and boot Openstack instances
+* Create and boot DeltaCloud instances
 * Halt and reboot instances
 * Suspend and resume instances
 * SSH into the instances
-* Automatic SSH key generation and Nova public key provisioning
-* Automatic floating IP allocation and association
 * Provision the instances with any built-in Vagrant provisioner
-* Boot instance from volume
-* Attach Cinder volumes to the instances
 * Minimal synced folder support via `rsync`
-* Custom sub-commands within Vagrant CLI to query Openstack objects
 
 ## Usage
 
 Install using standard Vagrant 1.1+ plugin installation methods. After
-installing, `vagrant up` and specify the `openstack` provider. An example is
+installing, `vagrant up` and specify the `deltacloud` provider. An example is
 shown below.
 
 ```
-$ vagrant plugin install vagrant-openstack-provider
+$ vagrant plugin install vagrant-deltacloud-provider
 ...
-$ vagrant up --provider=openstack
+$ vagrant up --provider=deltacloud
 ...
 ```
 
-Of course prior to doing this, you'll need to obtain an Openstack-compatible
+Of course prior to doing this, you'll need to obtain an DeltaCloud-compatible
 box file for Vagrant.
 
 ## Quick Start
@@ -54,17 +46,17 @@ where necessary.
 This Vagrantfile shows the minimal needed configuration.
 
 ```ruby
-require 'vagrant-openstack-provider'
+require 'vagrant-deltacloud-provider'
 
 Vagrant.configure('2') do |config|
 
-  config.vm.box       = 'openstack'
-  config.ssh.username = 'stack'
+  config.vm.box       = 'deltacloud'
+  config.ssh.username = 'ec2-user'
 
-  config.vm.provider :openstack do |os|
-    os.openstack_auth_url = 'http://keystone-server.net/v2.0/tokens'
-    os.username           = 'openstackUser'
-    os.password           = 'openstackPassword'
+  config.vm.provider :deltacloud do |os|
+    os.deltacloud_url = 'http://keystone-server.net/v2.0/tokens'
+    os.username           = 'deltacloudUser'
+    os.password           = 'deltacloudPassword'
     os.tenant_name        = 'myTenant'
     os.flavor             = 'm1.small'
     os.image              = 'ubuntu'
@@ -73,7 +65,7 @@ Vagrant.configure('2') do |config|
 end
 ```
 
-And then run `vagrant up --provider=openstack`.
+And then run `vagrant up --provider=deltacloud`.
 
 Note that normally a lot of this boilerplate is encoded within the box
 file, but the box file used for the quick start, the "dummy" box, has
@@ -85,19 +77,14 @@ This provider exposes quite a few provider-specific configuration options:
 
 ### Credentials
 
-* `username` - The username with which to access Openstack.
-* `password` - The API key for accessing Openstack.
-* `tenant_name` - The Openstack project name to work on
-* `openstack_auth_url` - The endpoint to authentication against. By default, vagrant will use the global
-openstack authentication endpoint for all regions with the exception of :lon. IF :lon region is specified
-vagrant will authenticate against the UK authentication endpoint.
-* `openstack_compute_url` - The compute service URL to hit. This is good for custom endpoints. If not provided, vagrant will try to get it from catalog endpoint.
-* `openstack_network_url` - The network service URL to hit. This is good for custom endpoints. If not provided, vagrant will try to get it from catalog endpoint.
-* `openstack_volume_url` - The block storage URL to hit. This is good for custom endpoints. If not provided, vagrant will try to get it from catalog endpoint.
+* `username` - The username with which to access DeltaCloud.
+* `password` - The API key for accessing DeltaCloud.
+* `tenant_name` - The DeltaCloud project name to work on
+* `deltacloud_url` - The DeltaCloud endpoint.
 
 ### VM Configuration
 
-* `server_name` - The name of the server within Openstack Cloud. This
+* `server_name` - The name of the server within DeltaCloud Cloud. This
   defaults to the name of the Vagrant machine (via `config.vm.define`), but
   can be overridden with this.
 * `flavor` - The name of the flavor to use for the VM
@@ -107,28 +94,28 @@ vagrant will authenticate against the UK authentication endpoint.
 * `floating_ip_pool_always_allocate` - if set to true, vagrant will always allocate floating ip instead of trying to reuse unassigned ones
 * `availability_zone` - Nova Availability zone used when creating VM
 * `security_groups` - List of strings representing the security groups to apply. e.g. ['ssh', 'http']
-* `user_data` - String of User data to be sent to the newly created OpenStack instance. Use this e.g. to inject a script at boot time.
+* `user_data` - String of User data to be sent to the newly created DeltaCloud instance. Use this e.g. to inject a script at boot time.
 * `metadata` - A Hash of metadata that will be sent to the instance for configuration e.g. `os.metadata  = { 'key' => 'value' }`
-* `scheduler_hints` - Pass hints to the OpenStack scheduler, e.g. { "cell": "some cell name" }
+* `scheduler_hints` - Pass hints to the DeltaCloud scheduler, e.g. { "cell": "some cell name" }
 
 #### Networks
 
 * `networks` - Network list the server must be connected on. Can be omitted if only one private network exists
-  in the Openstack project
+  in the DeltaCloud project
 
 Networking features in the form of `config.vm.network` are not
-supported with `vagrant-openstack`, currently. If any of these are
+supported with `vagrant-deltacloud`, currently. If any of these are
 specified, Vagrant will emit a warning, but will otherwise boot
-the Openstack server.
+the DeltaCloud server.
 
-You can provide network id or name. However, in Openstack a network name is not unique, thus if there are two networks with
+You can provide network id or name. However, in DeltaCloud a network name is not unique, thus if there are two networks with
 the same name in your project the plugin will fail. If so, you have to use only ids. Optionally, you can specify the IP
 address that will be assigned to the instance if you need a static address or if DHCP is not enable for this network.
 
 Here's an example which connect the instance to six Networks :
 
 ```ruby
-config.vm.provider :openstack do |os|
+config.vm.provider :deltacloud do |os|
   ...
     os.networks = [
       'net-name-01',
@@ -154,14 +141,14 @@ end
 
 #### Volumes
 
-* `volumes` - Volume list that have to be attached to the server. You can provide volume id or name. However, in Openstack
+* `volumes` - Volume list that have to be attached to the server. You can provide volume id or name. However, in DeltaCloud
 a volume name is not unique, thus if there are two volumes with the same name in your project the plugin will fail. If so,
 you have to use only ids. Optionally, you can specify the device that will be assigned to the volume.
 
 Here comes an example that show six volumes attached to a server :
 
 ```ruby
-config.vm.provider :openstack do |os|
+config.vm.provider :deltacloud do |os|
  ...
 os.volumes = [
   '619e027c-f4a9-493d-8c15-c89de81cb949',
@@ -190,22 +177,22 @@ end
 
 * `keypair_name` - The name of the key pair register in nova to associate with the VM. The public key should
   be the matching pair for the private key configured with `config.ssh.private_key_path` on Vagrant.
-* `public_key_path` - if `keypair_name` is not provided, the path to the public key will be used by vagrant to generate a keypair on the OpenStack cloud. The keypair will be destroyed when the VM is destroyed.
+* `public_key_path` - if `keypair_name` is not provided, the path to the public key will be used by vagrant to generate a keypair on the DeltaCloud cloud. The keypair will be destroyed when the VM is destroyed.
 
-If neither `keypair_name` nor `public_key_path` are set, vagrant will generate a new ssh key and automatically import it in Openstack.
+If neither `keypair_name` nor `public_key_path` are set, vagrant will generate a new ssh key and automatically import it in DeltaCloud.
 
 * `ssh_disabled` - if set to `true`, all ssh actions managed by the provider will be disabled. We recommend to use this option only to create private VMs that won't be accessed directly from vagrant. Some actions might still want to connect with SSH (provisionners...). In this case, we will just warn you that the ssh action is likely to fail, but we won't forbid it
 
 ### Synced folders
 
 * `sync_method` - Specify the synchronization method for shared folder between the host and the remote VM.
-  Currently, it can be "rsync" or "none". The default value is "rsync". If your Openstack image does not
+  Currently, it can be "rsync" or "none". The default value is "rsync". If your DeltaCloud image does not
   include rsync, you must set this parameter to "none".
 * `rsync_includes` - If `sync_method` is set to "rsync", this parameter give the list of local folders to sync
   on the remote VM.
 
 There is minimal support for synced folders. Upon `vagrant up`,
-`vagrant reload`, and `vagrant provision`, the Openstack provider will use
+`vagrant reload`, and `vagrant provision`, the DeltaCloud provider will use
 `rsync` (if available) to uni-directionally sync the folder to
 the remote machine over SSH.
 
@@ -215,7 +202,7 @@ chef, and puppet) to work!
 ## Vagrant standard configuration
 
 There are some standard configuration options that this provider takes into account when
-creating and connecting to OpenStack machines
+creating and connecting to DeltaCloud machines
 
 * `config.vm.box` - A box is not mandatory for this provider. However, if you are running Vagrant before version 1.6, vagrant will not start
    if this property is not set. In this case you can assign any value to it. See section "Box Format" to know more about boxes.
@@ -227,8 +214,8 @@ creating and connecting to OpenStack machines
 ## Box Format
 
 Every provider in Vagrant must introduce a custom box format. This
-provider introduces `openstack` boxes. You can view an example box in
-the [example_box/ directory](https://github.com/ggiamarchi/vagrant-openstack/tree/master/source/example_box).
+provider introduces `deltacloud` boxes. You can view an example box in
+the [example_box/ directory](https://github.com/ggiamarchi/vagrant-deltacloud-provider/tree/master/source/example_box).
 That directory also contains instructions on how to build a box.
 
 The box format is basically just the required `metadata.json` file
@@ -237,13 +224,13 @@ provider-specific configuration for this provider.
 
 ## Custom commands
 
-Custom commands are provided for Openstack. Type `vagrant openstack` to
+Custom commands are provided for DeltaCloud. Type `vagrant deltacloud` to
 show available commands.
 
 ```
-$ vagrant openstack
+$ vagrant deltacloud
 
-Usage: vagrant openstack command
+Usage: vagrant deltacloud command
 
 Available subcommands:
      image-list           List available images
@@ -251,13 +238,13 @@ Available subcommands:
      network-list         List private networks in project
      floatingip-list      List floating IP and floating IP pools
      volume-list          List existing volumes
-     reset                Reset Vagrant OpenStack provider to a clear state
+     reset                Reset Vagrant DeltaCloud provider to a clear state
 ```
 
-For instance `vagrant openstack image-list` lists images available in Glance.
+For instance `vagrant deltacloud image-list` lists images available in Glance.
 
 ```
-$ vagrant openstack image-list
+$ vagrant deltacloud image-list
 
 +--------------------------------------+---------------------+
 | 'Id'                                 | 'Name'              |
@@ -274,7 +261,7 @@ $ vagrant openstack image-list
 
 ### Development
 
-To work on the `vagrant-openstack` plugin, clone this repository out, and use
+To work on the `vagrant-deltacloud` plugin, clone this repository out, and use
 [Bundler](http://gembundler.com) to get the dependencies:
 
 Note: Vagrant 1.6 requires bundler version < 1.7. We recommend using last 1.6
@@ -302,7 +289,7 @@ creating a `Vagrantfile` in the top level of this directory (it is gitignored)
 that uses it, and uses bundler to execute Vagrant:
 
 ```
-$ bundle exec vagrant up --provider=openstack
+$ bundle exec vagrant up --provider=deltacloud
 ```
 
 ## Troubleshooting
@@ -310,8 +297,8 @@ $ bundle exec vagrant up --provider=openstack
 ### Logging
 
 To enable all Vagrant logs set environment variable `VAGRANT_LOG` to the desire
-log level (for instance `VAGRANT_LOG=debug`). If you want only Openstack provider
-logs use the variable `VAGRANT_OPENSTACK_LOG`. if both variables are set, `VAGRANT_LOG`
+log level (for instance `VAGRANT_LOG=debug`). If you want only DeltaCloud provider
+logs use the variable `VAGRANT_DELTACLOUD_LOG`. if both variables are set, `VAGRANT_LOG`
 takes precedence.
 
 
@@ -327,13 +314,3 @@ later, and enable:
 ```
 config.ssh.pty = true
 ```
-
-## Sponsoring
-
-[![Numergy](https://www.numergy.com/images/general/numergy-logo.png)](http://www.numergy.com)
-
-
-We thanks [Numergy](http://www.numergy.com) for giving us access to free compute resources on their OpenStack cloud that enabled us to test our provider on a real OpenStack installation.
-
-If you are also powering an OpenStack cloud, we'd like to hear from you. Test
-the plugin and report us issues or features you'd like to see.
