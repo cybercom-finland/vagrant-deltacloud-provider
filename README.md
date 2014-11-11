@@ -173,8 +173,6 @@ os.volumes = [
 end
 ```
 
-* `volume_boot` - Volume to boot the VM from. When booting from an existing volume, `image` is not necessary and must not be provided.
-
 ### SSH authentication
 
 * `keypair_name` - The name of the key pair register in Deltacloud to associate with the VM. The public key should

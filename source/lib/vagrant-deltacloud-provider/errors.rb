@@ -124,10 +124,6 @@ module VagrantPlugins
         error_key(:missing_boot_option)
       end
 
-      class ConflictBootOption < VagrantDeltacloudError
-        error_key(:conflict_boot_option)
-      end
-
       class NoMatchingSshUsername < VagrantDeltacloudError
         error_key(:ssh_username_missing)
       end

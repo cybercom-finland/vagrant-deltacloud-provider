@@ -13,7 +13,6 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
       config.stub(:tenant_name) { 'testTenant' }
       config.stub(:server_name) { 'testName' }
       config.stub(:image) { 'ubuntu' }
-      config.stub(:volume_boot) { nil }
       config.stub(:availability_zone) { nil }
       config.stub(:scheduler_hints) { nil }
       config.stub(:security_groups) { nil }
@@ -62,7 +61,6 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
       r.stub(:resolve_image).with(anything) do
         Item.new('image-01', 'ubuntu')
       end
-      r.stub(:resolve_volume_boot).with(anything) { 'ubuntu-drive' }
       r.stub(:resolve_networks).with(anything) { 'net-001' }
       r.stub(:resolve_volumes).with(anything) do
         [{ id: 'vol-01', device: nil }]
@@ -89,17 +87,9 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
   end
 
   describe 'call' do
-    context 'with both image and volume_boot specified' do
-      it 'should raise an error' do
-        config.stub(:image) { 'linux-image' }
-        config.stub(:volume_boot) { 'linux-volume' }
-        expect { @action.call(env) }.to raise_error Errors::ConflictBootOption
-      end
-    end
-    context 'with neither image nor volume_boot specified' do
+    context 'with no image specified' do
       it 'should raise an error' do
         config.stub(:image) { nil }
-        config.stub(:volume_boot) { nil }
         expect { @action.call(env) }.to raise_error Errors::MissingBootOption
       end
     end
@@ -128,7 +118,6 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
         name: 'testName',
         flavor_ref: flavor.id,
         image_ref: image.id,
-        volume_boot: nil,
         networks: [{ uuid: 'test-networks-1' }, { uuid: 'test-networks-2', fixed_ip: '1.2.3.4' }],
         keypair: 'test-keypair',
         availability_zone: 'test-az',
@@ -162,7 +151,6 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
           name: nil,
           flavor_ref: flavor.id,
           image_ref: image.id,
-          volume_boot: nil,
           networks: [{ uuid: 'test-networks-1' }],
           keypair: 'test-keypair',
           availability_zone: nil,

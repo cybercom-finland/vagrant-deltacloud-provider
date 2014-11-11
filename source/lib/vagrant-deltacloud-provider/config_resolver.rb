@@ -71,13 +71,6 @@ module VagrantPlugins
         networks
       end
 
-      def resolve_volume_boot(env)
-        @logger.info 'Resolving image'
-        config = env[:machine].provider_config
-        return nil if config.volume_boot.nil?
-        return resolve_volume_without_volume_service(env, config.volume_boot, 'vda')
-      end
-
       def resolve_volumes(env)
         @logger.info 'Resolving volume(s)'
         config = env[:machine].provider_config

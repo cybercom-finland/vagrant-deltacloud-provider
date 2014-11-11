@@ -20,10 +20,6 @@ module VagrantPlugins
       # expression to partially match a name.
       attr_accessor :image
 
-      # Volume to boot the vm from
-      #
-      attr_accessor :volume_boot
-
       #
       # The name of the deltacloud project on witch the vm will be created.
       #
@@ -132,7 +128,6 @@ module VagrantPlugins
         @deltacloud_api_url = UNSET_VALUE
         @flavor = UNSET_VALUE
         @image = UNSET_VALUE
-        @volume_boot = UNSET_VALUE
         @tenant_name = UNSET_VALUE
         @server_name = UNSET_VALUE
         @username = UNSET_VALUE
@@ -191,7 +186,6 @@ module VagrantPlugins
         @deltacloud_api_url = nil if @deltacloud_api_url == UNSET_VALUE
         @flavor = nil if @flavor == UNSET_VALUE
         @image = nil if @image == UNSET_VALUE
-        @volume_boot = nil if @volume_boot == UNSET_VALUE
         @tenant_name = nil if @tenant_name == UNSET_VALUE
         @server_name = nil if @server_name == UNSET_VALUE
         @username = nil if @username == UNSET_VALUE

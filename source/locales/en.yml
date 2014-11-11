@@ -168,9 +168,7 @@ en:
       multiple_volume_name: |-
         More than one volume exists with name '%{name}'. In this case you can't use name in volume definition. Please, use id instead.
       missing_boot_option: |-
-        Either 'image' or 'volume_boot' configuration must be provided
-      conflict_boot_option: |-
-        Only one of 'image' and 'volume_boot' configuration must be provided
+        'image' configuration must be provided
       ssh_username_missing: |-
         Vagrant was unable to resolve which ssh username to use to connect to the machine. Please provide config parameter `ssh.username`
       instance_not_found: |-

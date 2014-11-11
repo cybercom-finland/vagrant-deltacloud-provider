@@ -26,13 +26,9 @@ module VagrantPlugins
 
           config = env[:machine].provider_config
 
-          fail Errors::MissingBootOption if config.image.nil? && config.volume_boot.nil?
-          fail Errors::ConflictBootOption unless config.image.nil? || config.volume_boot.nil?
-
           options = {
             flavor: @resolver.resolve_flavor(env),
             image: @resolver.resolve_image(env),
-            volume_boot: @resolver.resolve_volume_boot(env),
             networks: @resolver.resolve_networks(env),
             volumes: @resolver.resolve_volumes(env),
             keypair_name: @resolver.resolve_keypair(env),
@@ -70,7 +66,6 @@ module VagrantPlugins
             env[:ui].info(" -- Image           : #{options[:image].name}")
             env[:ui].info(" -- ImageRef        : #{options[:image].id}")
           end
-          env[:ui].info(" -- Boot volume     : #{options[:volume_boot][:id]} (#{options[:volume_boot][:device]})") unless options[:volume_boot].nil?
           env[:ui].info(" -- KeyPair         : #{options[:keypair_name]}")
 
           unless options[:networks].empty?
@@ -112,7 +107,6 @@ module VagrantPlugins
           create_opts = {
             name: server_name,
             image_ref: image_ref,
-            volume_boot: options[:volume_boot],
             flavor_ref: options[:flavor].id,
             keypair: options[:keypair_name],
             availability_zone: options[:availability_zone],
