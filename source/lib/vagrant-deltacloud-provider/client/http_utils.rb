@@ -10,19 +10,25 @@ module VagrantPlugins
       include VagrantPlugins::Deltacloud::HttpUtils::RequestLogger
 
       def get(env, url, headers = {})
+        config = env[:machine].provider_config
         calling_method = caller[0][/`.*'/][1..-2]
         @logger.debug("#{calling_method} - start")
-
-        headers.merge!(:accept => :json)
+    
+        headers.merge!(:accept => :json, :content_type => :json)
 
         log_request(:GET, url, headers)
 
-        RestClient.get(url, headers) { |res| handle_response(res) }.tap do
+        RestClient.get(
+          :url => config.deltacloud_api_url + url + "?format=json",
+          :headers => headers,
+          :user => config.username + "+" + config.tenant_name,
+          :password => config.password) { |res| handle_response(res) }.tap do
           @logger.debug("#{calling_method} - end")
         end
       end
 
       def post(env, url, body = nil, headers = {})
+        config = env[:machine].provider_config
         calling_method = caller[0][/`.*'/][1..-2]
         @logger.debug("#{calling_method} - start")
 
@@ -30,12 +36,18 @@ module VagrantPlugins
 
         log_request(:POST, url, body, headers)
 
-        RestClient.post(url, body, headers) { |res| handle_response(res) }.tap do
+        RestClient.post(
+          :url => config.deltacloud_api_url + url + "?format=json",
+          :body => body,
+          :user => config.username + "+" + config.tenant_name,
+          :password => config.password,
+          :headers => headers) { |res| handle_response(res) }.tap do
           @logger.debug("#{calling_method} - end")
         end
       end
 
       def delete(env, url, headers = {})
+        config = env[:machine].provider_config
         calling_method = caller[0][/`.*'/][1..-2]
         @logger.debug("#{calling_method} - start")
 
@@ -43,7 +55,11 @@ module VagrantPlugins
 
         log_request(:DELETE, url, headers)
 
-        RestClient.delete(url, headers) { |res| handle_response(res) }.tap do
+        RestClient.delete(
+          :url => config.deltacloud_api_url + url + "?format=json",
+          :user => config.username + "+" + config.tenant_name,
+          :password => config.password,
+          :headers => headers) { |res| handle_response(res) }.tap do
           @logger.debug("#{calling_method} - end")
         end
       end
