@@ -2,7 +2,7 @@
 
 #Provider examples:
 #Cybercom
-export OS_NETWORK_URL=https://cloud.cybercom.com/api
+export OS_API_URL=https://standard.fi-central.cybercomcloud.com/api
 #....
 
 if [ -z "$OS_USERNAME" ]; then

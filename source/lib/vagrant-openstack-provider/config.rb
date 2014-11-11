@@ -8,24 +8,9 @@ module VagrantPlugins
       #
       attr_accessor :password
 
-      # The compute service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
+      # The url to access Deltacloud.
       #
-      attr_accessor :deltacloud_compute_url
-
-      # The network service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
-      #
-      attr_accessor :deltacloud_network_url
-
-      # The block storage service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
-      #
-      attr_accessor :deltacloud_volume_url
-
-      # The image service url to access Deltacloud. If nil, it will read from hypermedia catalog form REST API
-      #
-      attr_accessor :deltacloud_image_url
-
-      # The authentication endpoint. This defaults to Deltacloud's global authentication endpoint.
-      attr_accessor :deltacloud_auth_url
+      attr_accessor :deltacloud_api_url
 
       # The flavor of server to launch, either the ID or name. This
       # can also be a regular expression to partially match a name.
@@ -144,11 +129,7 @@ module VagrantPlugins
 
       def initialize
         @password = UNSET_VALUE
-        @deltacloud_compute_url = UNSET_VALUE
-        @deltacloud_network_url = UNSET_VALUE
-        @deltacloud_volume_url = UNSET_VALUE
-        @deltacloud_image_url = UNSET_VALUE
-        @deltacloud_auth_url = UNSET_VALUE
+        @deltacloud_api_url = UNSET_VALUE
         @flavor = UNSET_VALUE
         @image = UNSET_VALUE
         @volume_boot = UNSET_VALUE
@@ -207,11 +188,7 @@ module VagrantPlugins
       # rubocop:disable Style/CyclomaticComplexity
       def finalize!
         @password = nil if @password == UNSET_VALUE
-        @deltacloud_compute_url = nil if @deltacloud_compute_url == UNSET_VALUE
-        @deltacloud_network_url = nil if @deltacloud_network_url == UNSET_VALUE
-        @deltacloud_volume_url = nil if @deltacloud_volume_url == UNSET_VALUE
-        @deltacloud_image_url = nil if @deltacloud_image_url == UNSET_VALUE
-        @deltacloud_auth_url = nil if @deltacloud_auth_url == UNSET_VALUE
+        @deltacloud_api_url = nil if @deltacloud_api_url == UNSET_VALUE
         @flavor = nil if @flavor == UNSET_VALUE
         @image = nil if @image == UNSET_VALUE
         @volume_boot = nil if @volume_boot == UNSET_VALUE
@@ -261,11 +238,7 @@ module VagrantPlugins
         end
 
         {
-          deltacloud_compute_url: @deltacloud_compute_url,
-          deltacloud_network_url: @deltacloud_network_url,
-          deltacloud_volume_url: @deltacloud_volume_url,
-          deltacloud_image_url: @deltacloud_image_url,
-          deltacloud_auth_url: @deltacloud_auth_url
+          deltacloud_api_url: @deltacloud_api_url
         }.each_pair do |key, value|
           errors << I18n.t('vagrant_deltacloud.config.invalid_uri', key: key, uri: value) unless value.nil? || valid_uri?(value)
         end

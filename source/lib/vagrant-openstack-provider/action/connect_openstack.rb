@@ -46,13 +46,9 @@ module VagrantPlugins
             client.session.endpoints[service['type'].to_sym] = url unless url.empty?
           end
 
-          client.session.endpoints[:network] = choose_api_version('Neutron', 'deltacloud_network_url', 'v2') do
+          client.session.endpoints[:network] = choose_api_version('Neutron', 'deltacloud_api_url', 'v2') do
             client.neutron.get_api_version_list(env)
-          end if config.deltacloud_network_url.nil? && !client.session.endpoints[:network].nil?
-
-          client.session.endpoints[:image] = choose_api_version('Glance', 'deltacloud_image_url', 'v2', false) do
-            client.glance.get_api_version_list(env)
-          end if config.deltacloud_image_url.nil? && !client.session.endpoints[:image].nil?
+          end if config.deltacloud_api_url.nil? && !client.session.endpoints[:network].nil?
         end
 
         def choose_api_version(service_name, url_property, version_prefix = nil, fail_if_not_found = true)
@@ -71,10 +67,7 @@ module VagrantPlugins
         def override_endpoint_catalog_with_user_config(env)
           client = env[:deltacloud_client]
           config = env[:machine].provider_config
-          client.session.endpoints[:compute] = config.deltacloud_compute_url unless config.deltacloud_compute_url.nil?
-          client.session.endpoints[:network] = config.deltacloud_network_url unless config.deltacloud_network_url.nil?
-          client.session.endpoints[:volume]  = config.deltacloud_volume_url  unless config.deltacloud_volume_url.nil?
-          client.session.endpoints[:image]   = config.deltacloud_image_url   unless config.deltacloud_image_url.nil?
+          client.session.endpoints[:api] = config.deltacloud_api_url unless config.deltacloud_api_url.nil?
           client.session.endpoints.delete_if { |_, value| value.nil? || value.empty? }
         end
 

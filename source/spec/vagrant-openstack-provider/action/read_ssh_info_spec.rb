@@ -8,9 +8,7 @@ describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
 
   let(:config) do
     double('config').tap do |config|
-      config.stub(:deltacloud_auth_url) { 'http://keystoneAuthV2' }
-      config.stub(:deltacloud_compute_url) { nil }
-      config.stub(:deltacloud_network_url) { nil }
+      config.stub(:deltacloud_api_url) { 'https://standard.fi-central.cybercomcloud.com/api' }
       config.stub(:tenant_name) { 'testTenant' }
       config.stub(:username) { 'username' }
       config.stub(:password) { 'password' }
