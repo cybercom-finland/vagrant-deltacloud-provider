@@ -4,6 +4,12 @@ include VagrantPlugins::Deltacloud
 
 describe VagrantPlugins::Deltacloud::HttpUtils do
 
+  let(:deltacloud) do
+    double('deltacloud').tap do |keystone|
+      keystone.stub(:authenticate).with(anything)
+    end
+  end
+
   let(:env) do
     Hash.new.tap do |env|
       env[:ui] = double('ui')
