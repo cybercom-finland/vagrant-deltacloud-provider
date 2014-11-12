@@ -1,4 +1,5 @@
 require 'vagrant-deltacloud-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
   module Deltacloud
@@ -10,6 +11,7 @@ module VagrantPlugins
         end
 
         def execute(env)
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           if env[:machine].id
             @logger.info "Resuming suspended VM #{env[:machine].id}..."
             env[:ui].info I18n.t('vagrant.actions.vm.resume.resuming')

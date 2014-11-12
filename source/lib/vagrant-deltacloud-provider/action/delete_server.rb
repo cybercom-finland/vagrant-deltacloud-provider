@@ -13,6 +13,7 @@ module VagrantPlugins
         end
 
         def execute(env)
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           if env[:machine].id
             @logger.info "Deleting server #{env[:machine].id}..."
             env[:ui].info(I18n.t('vagrant_deltacloud.deleting_server'))

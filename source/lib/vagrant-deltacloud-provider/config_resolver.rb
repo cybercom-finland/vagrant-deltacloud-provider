@@ -1,8 +1,10 @@
+require 'vagrant-deltacloud-provider/client/deltacloud'
 module VagrantPlugins
   module Deltacloud
     class ConfigResolver
       def initialize
         @logger = Log4r::Logger.new('vagrant_deltacloud::action::config_resolver')
+        @deltacloud = Deltacloud::DeltacloudClient.instance
       end
 
       def resolve_ssh_port(env)
@@ -14,9 +16,8 @@ module VagrantPlugins
       def resolve_hardware_profile(env)
         @logger.info 'Resolving hardware profile'
         config = env[:machine].provider_config
-        deltacloud = env[:deltacloud_client]
         env[:ui].info(I18n.t('vagrant_deltacloud.finding_hardware_profile'))
-        hardware_profiles = deltacloud.list_hardware_profiles(env)
+        hardware_profiles = @deltacloud.list_hardware_profiles(env)
         @logger.info "Finding hardware profile matching name '#{config.hardware_profile}'"
         hardware_profile = find_matching(hardware_profiles, config.hardware_profile)
         fail Errors::NoMatchingHardwareProfile unless hardware_profile
@@ -27,9 +28,8 @@ module VagrantPlugins
         @logger.info 'Resolving image'
         config = env[:machine].provider_config
         return nil if config.image.nil?
-        deltacloud = env[:deltacloud_client]
         env[:ui].info(I18n.t('vagrant_deltacloud.finding_image'))
-        images = deltacloud.list_images(env)
+        images = @deltacloud.list_images(env)
         @logger.info "Finding image matching name '#{config.image}'"
         image = find_matching(images, config.image)
         fail Errors::NoMatchingImage unless image
@@ -38,9 +38,8 @@ module VagrantPlugins
 
       def resolve_public_key(env)
         config = env[:machine].provider_config
-        deltacloud = env[:deltacloud_client]
         return config.public_key_name if config.public_key_name
-        return deltacloud.import_public_key_from_file(env, config.public_key_path) if config.public_key_path
+        return @deltacloud.import_public_key_from_file(env, config.public_key_path) if config.public_key_path
         generate_keypair(env)
       end
 
@@ -49,7 +48,7 @@ module VagrantPlugins
         config = env[:machine].provider_config
         return [] if config.networks.nil? || config.networks.empty?
         env[:ui].info(I18n.t('vagrant_deltacloud.finding_networks'))
-        all_networks = env[:deltacloud_client].list_networks(env)
+        all_networks = @deltacloud.list_networks(env)
         all_network_ids = all_networks.map { |v| v.id }
 
         networks = []
@@ -93,9 +92,8 @@ module VagrantPlugins
 
       def generate_keypair(env)
         key = SSHKey.generate
-        deltacloud = env[:deltacloud_client]
         generated_keyname = 'vagrant_key_' + SecureRandom.uuid
-        deltacloud.add_public_key(env, generated_keyname, key.ssh_public_key)
+        @deltacloud.add_public_key(env, generated_keyname, key.ssh_public_key)
         file_path = "#{env[:machine].data_dir}/#{generated_keyname}"
         File.write(file_path, key.private_key)
         File.chmod(0600, file_path)

@@ -3,6 +3,7 @@ require 'log4r'
 require 'vagrant-deltacloud-provider/config_resolver'
 require 'vagrant-deltacloud-provider/utils'
 require 'vagrant-deltacloud-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
   module Deltacloud
@@ -20,6 +21,7 @@ module VagrantPlugins
 
         def execute(env)
           @logger.info 'Reading SSH info'
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           server_id = env[:machine].id.to_sym
           SSHInfoHolder.instance.tap do |holder|
             holder.synchronize do

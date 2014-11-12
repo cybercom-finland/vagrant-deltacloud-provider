@@ -2,6 +2,7 @@ require 'log4r'
 require 'timeout'
 
 require 'vagrant-deltacloud-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
   module Deltacloud
@@ -15,6 +16,7 @@ module VagrantPlugins
         end
 
         def execute(env)
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           if env[:machine].id
             env[:ui].info(I18n.t('vagrant_deltacloud.waiting_stop'))
             client = env[:deltacloud_client]

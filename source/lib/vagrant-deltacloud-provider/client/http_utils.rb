@@ -31,12 +31,12 @@ module VagrantPlugins
         end
       end
 
-      def post(env, url, body = nil, headers = {})
+      def post(env, url, body = nil)
         config = env[:machine].provider_config
         calling_method = caller[0][/`.*'/][1..-2]
         @logger.debug("#{calling_method} - start")
-
-        headers.merge!(accept: 'json', content_type: 'json')
+        headers = {}
+        headers.merge!(accept: 'json')
 
         url = config.deltacloud_api_url + url +
           '?format=json'
@@ -49,9 +49,9 @@ module VagrantPlugins
         log_request(:POST, url, body, headers)
 
         resource.post(
-          body: body,
+          body,
           headers: headers) { |res| handle_response(res) }.tap do
-          @logger.debug("#{calling_method} - end")
+            @logger.debug("#{calling_method} - end")
         end
       end
 
@@ -93,7 +93,7 @@ module VagrantPlugins
         when 401
           fail Errors::AuthenticationRequired
         when 400, 404, 409
-          message = JSON.parse(response.to_s)[ERRORS[response.code.to_s]]['message']
+          message = JSON.parse(response)[ERRORS[response.code.to_s]]['message']
           fail Errors::VagrantDeltacloudError, message: message, code: response.code
         else
           fail Errors::VagrantDeltacloudError, message: response.to_s, code: response.code

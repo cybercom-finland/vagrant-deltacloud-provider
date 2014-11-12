@@ -1,6 +1,7 @@
 require 'log4r'
 
 require 'vagrant-deltacloud-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
   module Deltacloud
@@ -15,6 +16,7 @@ module VagrantPlugins
 
         def execute(env)
           env[:machine_state_id] = read_state(env)
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           @app.call(env)
         end
 

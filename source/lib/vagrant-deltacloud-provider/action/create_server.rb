@@ -7,6 +7,7 @@ require 'vagrant-deltacloud-provider/config_resolver'
 require 'vagrant-deltacloud-provider/utils'
 require 'vagrant-deltacloud-provider/action/abstract_action'
 require 'vagrant/util/retryable'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
   module Deltacloud
@@ -39,6 +40,7 @@ module VagrantPlugins
 
           # Store the ID right away so we can track it
           env[:machine].id = server_id
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
 
           waiting_for_server_to_be_built(env, server_id)
           attach_volumes(env, server_id, options[:volumes]) unless options[:volumes].empty?
@@ -76,8 +78,7 @@ module VagrantPlugins
           hardware_profile_id = options[:hardware_profile].id
           public_key_name = options[:public_key_name]
 
-          deltacloud.add_public_key(env, public_key_name, public_key)
-          deltacloud.launch_instance(env, server_name, image_id, hardware_profile_id, public_key_name)
+          env[:deltacloud_client].launch_instance(env, server_name, image_id, hardware_profile_id, public_key_name)
         end
 
         def waiting_for_server_to_be_built(env, server_id, retry_interval = 3, timeout = 200)

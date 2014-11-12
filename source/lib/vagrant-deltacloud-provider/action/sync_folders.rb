@@ -3,6 +3,7 @@ require 'rbconfig'
 require 'vagrant/util/subprocess'
 
 require 'vagrant-deltacloud-provider/action/abstract_action'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
   module Deltacloud
@@ -13,6 +14,7 @@ module VagrantPlugins
         end
 
         def execute(env)
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           sync_method = env[:machine].provider_config.sync_method
           ssh_disabled = env[:machine].provider_config.ssh_disabled
           if sync_method == 'none' || ssh_disabled

@@ -1,4 +1,5 @@
 require 'log4r'
+require 'vagrant-deltacloud-provider/client/deltacloud'
 
 module VagrantPlugins
   module Deltacloud
@@ -12,6 +13,7 @@ module VagrantPlugins
         end
 
         def execute(env)
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           waiting_for_server_to_be_reachable(env)
           @logger.info 'The server is ready'
           env[:ui].info(I18n.t('vagrant_deltacloud.ready'))
