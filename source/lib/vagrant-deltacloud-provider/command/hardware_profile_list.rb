@@ -15,7 +15,6 @@ module VagrantPlugins
           hardware_profiles = env[:deltacloud_client].list_hardware_profiles(env)
 
           rows = []
-          @logger.info 'hardware_profiles received: ' + hardware_profiles
           hardware_profiles.each do |h|
             rows << [h.id, h.name, h.vcpus, h.ram, h.disk]
           end

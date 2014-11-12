@@ -16,13 +16,17 @@ module VagrantPlugins
 
         headers.merge!(accept: 'json', content_type: 'json')
 
+        url = config.deltacloud_api_url + url +
+          '?format=json'
+
+        resource = RestClient::Resource.new(
+          url,
+          config.username + '+' + config.tenant_name,
+          config.password)
+
         log_request(:GET, url, headers)
 
-        RestClient.get(
-          url: config.deltacloud_api_url + url + '?format=json',
-          headers: headers,
-          user: config.username + '+' + config.tenant_name,
-          password: config.password) { |res| handle_response(res) }.tap do
+        resource.get(headers: headers) { |res| handle_response(res) }.tap do
           @logger.debug("#{calling_method} - end")
         end
       end
@@ -34,13 +38,18 @@ module VagrantPlugins
 
         headers.merge!(accept: 'json', content_type: 'json')
 
+        url = config.deltacloud_api_url + url +
+          '?format=json'
+
+        resource = RestClient::Resource.new(
+          url,
+          config.username + '+' + config.tenant_name,
+          config.password)
+
         log_request(:POST, url, body, headers)
 
-        RestClient.post(
-          url: config.deltacloud_api_url + url + '?format=json',
+        resource.post(
           body: body,
-          user: config.username + '+' + config.tenant_name,
-          password: config.password,
           headers: headers) { |res| handle_response(res) }.tap do
           @logger.debug("#{calling_method} - end")
         end
@@ -53,13 +62,16 @@ module VagrantPlugins
 
         headers.merge!(accept: 'json', content_type: 'json')
 
+        url = config.deltacloud_api_url + url +
+          '?format=json'
+
+        resource = RestClient::Resource.new(
+          url,
+          config.username + '+' + config.tenant_name,
+          config.password)
         log_request(:DELETE, url, headers)
 
-        RestClient.delete(
-          url: config.deltacloud_api_url + url + '?format=json',
-          user: config.username + '+' + config.tenant_name,
-          password: config.password,
-          headers: headers) { |res| handle_response(res) }.tap do
+        resource.delete(headers: headers) { |res| handle_response(res) }.tap do
           @logger.debug("#{calling_method} - end")
         end
       end

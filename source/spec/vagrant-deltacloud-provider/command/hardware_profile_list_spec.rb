@@ -7,8 +7,8 @@ describe VagrantPlugins::Deltacloud::Command::HardwareProfileList do
       double('deltacloud').tap do |deltacloud|
         deltacloud.stub(:list_hardware_profiles) do
           [
-            HardwareProfile.new('001', 'small', '1', '1024', '10'),
-            HardwareProfile.new('002', 'large', '4', '4096', '100')
+            HardwareProfile.new('1', 'XS', '1', '512', '10'),
+            HardwareProfile.new('2', 'S', '1', '2048', '20')
           ]
         end
       end

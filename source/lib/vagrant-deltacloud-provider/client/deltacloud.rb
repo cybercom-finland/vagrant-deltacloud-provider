@@ -2,12 +2,14 @@ require 'log4r'
 require 'restclient'
 require 'json'
 require 'vagrant-deltacloud-provider/client/http_utils'
+require 'vagrant-deltacloud-provider/client/domain'
 
 module VagrantPlugins
   module Deltacloud
     class DeltacloudClient
       include Singleton
       include VagrantPlugins::Deltacloud::HttpUtils
+      include VagrantPlugins::Deltacloud::Domain
 
       def initialize
         @logger = Log4r::Logger.new('vagrant_deltacloud::deltacloud')
@@ -37,7 +39,10 @@ module VagrantPlugins
 
       def list_hardware_profiles(env)
         hardware_profile_list = get(env, '/hardware_profiles')
-        JSON.parse(hardware_profile_list)
+        JSON.parse(hardware_profile_list)['hardware_profiles'].map do |hp|
+          HardwareProfile.new(hp['id'], hp['name'], hp['properties']['cpu'],
+            hp['properties']['memory'], hp['properties']['storage'])
+       end
       end
 
       def list_instances(env)
