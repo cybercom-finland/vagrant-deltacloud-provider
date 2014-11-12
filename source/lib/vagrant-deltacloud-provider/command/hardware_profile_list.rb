@@ -12,7 +12,7 @@ module VagrantPlugins
         end
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
-          hardware_profiles = env[:deltacloud_client].deltacloud.list_hardware_profiles(env)
+          hardware_profiles = env[:deltacloud_client].list_hardware_profiles(env)
 
           rows = []
           @logger.info 'hardware_profiles received: ' + hardware_profiles

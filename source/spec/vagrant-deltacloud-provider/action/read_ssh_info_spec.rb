@@ -41,7 +41,7 @@ describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
       env[:machine].stub(:id) { '1234' }
       env[:machine].stub(:data_dir) { '/data/dir' }
       env[:deltacloud_client] = double('deltacloud_client')
-      env[:deltacloud_client].stub(:deltacloud) { deltacloud }
+      env.stub(:deltacloud_client) { deltacloud }
     end
   end
 

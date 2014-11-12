@@ -14,7 +14,7 @@ module VagrantPlugins
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
           rows = []
           headers = %w(Id Name)
-          images = env[:deltacloud_client].deltacloud.get_all_images(env)
+          images = env[:deltacloud_client].get_all_images(env)
           images.each { |image| rows << [image.id, image.name] }
           display_table(env, headers, rows)
         end

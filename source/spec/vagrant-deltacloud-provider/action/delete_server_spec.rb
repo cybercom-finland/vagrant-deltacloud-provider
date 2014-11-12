@@ -9,18 +9,12 @@ describe VagrantPlugins::Deltacloud::Action::DeleteServer do
     end
   end
 
-  let(:deltacloud_client) do
-    double('deltacloud_client').tap do |os|
-      os.stub(:deltacloud) { deltacloud }
-    end
-  end
-
   let(:env) do
     Hash.new.tap do |env|
       env[:ui] = double('ui')
       env[:ui].stub(:info).with(anything)
       env[:ui].stub(:error).with(anything)
-      env[:deltacloud_client] = deltacloud_client
+      env.stub(:deltacloud_client) { deltacloud }
       env[:machine] = OpenStruct.new.tap do |m|
         m.id = 'server_id'
       end

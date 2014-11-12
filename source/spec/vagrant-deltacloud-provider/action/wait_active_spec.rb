@@ -12,9 +12,7 @@ describe VagrantPlugins::Deltacloud::Action::WaitForServerToBeActive do
         ui.stub(:info).with(anything)
         ui.stub(:error).with(anything)
       end
-      env[:deltacloud_client] = double('deltacloud_client').tap do |os|
-        os.stub(:deltacloud) { deltacloud }
-      end
+      env.stub(:deltacloud_client) { deltacloud }
       env[:machine] = OpenStruct.new.tap do |m|
         m.id = 'server_id'
       end

@@ -14,8 +14,7 @@ describe VagrantPlugins::Deltacloud::HttpUtils do
     Hash.new.tap do |env|
       env[:ui] = double('ui')
       env[:ui].stub(:warn).with(anything)
-      env[:deltacloud_client] = double('deltacloud_client')
-      env[:deltacloud_client].stub(:deltacloud) { deltacloud }
+      env.stub(:deltacloud_client) { deltacloud }
     end
   end
 

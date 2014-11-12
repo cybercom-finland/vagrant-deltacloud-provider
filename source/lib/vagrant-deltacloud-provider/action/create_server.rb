@@ -87,7 +87,7 @@ module VagrantPlugins
             server_status = 'WAITING'
             until server_status == 'ACTIVE'
               @logger.debug('Waiting for server to be ACTIVE')
-              server_status = env[:deltacloud_client].deltacloud.get_server_details(env, server_id)['status']
+              server_status = env[:deltacloud_client].get_server_details(env, server_id)['status']
               fail Errors::ServerStatusError, server: server_id if server_status == 'ERROR'
               sleep retry_interval
             end
@@ -98,7 +98,7 @@ module VagrantPlugins
           @logger.info("Attaching volumes #{volumes} to server #{server_id}")
           volumes.each do |volume|
             @logger.debug("Attaching volumes #{volume}")
-            env[:deltacloud_client].deltacloud.attach_volume(env, server_id, volume[:id], volume[:device])
+            env[:deltacloud_client].attach_volume(env, server_id, volume[:id], volume[:device])
           end
         end
       end

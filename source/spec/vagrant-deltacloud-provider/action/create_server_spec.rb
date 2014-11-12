@@ -47,8 +47,7 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
         m.provider_config = config
         m.id = nil
       end
-      env[:deltacloud_client] = double('deltacloud_client')
-      env[:deltacloud_client].stub(:deltacloud) { deltacloud }
+      env.stub(:deltacloud_client) { deltacloud }
     end
   end
 

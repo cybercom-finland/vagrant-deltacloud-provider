@@ -18,8 +18,7 @@ describe VagrantPlugins::Deltacloud::Command::HardwareProfileList do
       Hash.new.tap do |env|
         env[:ui] = double('ui')
         env[:ui].stub(:info).with(anything)
-        env[:deltacloud_client] = double
-        env[:deltacloud_client].stub(:deltacloud) { deltacloud }
+        env.stub(:deltacloud_client) { deltacloud }
       end
     end
 
