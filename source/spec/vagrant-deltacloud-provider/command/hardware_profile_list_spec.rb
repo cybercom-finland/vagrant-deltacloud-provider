@@ -27,14 +27,14 @@ describe VagrantPlugins::Deltacloud::Command::HardwareProfileList do
     end
 
     it 'prints hardware profile list from server' do
-      deltacloud.should_receive(:get_all_hardwre_profiles).with(env)
+      deltacloud.should_receive(:list_hardware_profiles).with(env)
 
       expect(env[:ui]).to receive(:info).with('
 +-----+-------+------+----------+----------------+
 | Id  | Name  | vCPU | RAM (Mo) | Disk size (Go) |
 +-----+-------+------+----------+----------------+
-| 001 | small | 1    | 1024     | 10             |
-| 002 | large | 4    | 4096     | 100            |
+| 1   | XS    | 1    | 512      | 10             |
+| 2   | S     | 1    | 2048     | 20             |
 +-----+-------+------+----------+----------------+')
 
       @hardware_profile_list_cmd.cmd('hardware-profile-list', [], env)

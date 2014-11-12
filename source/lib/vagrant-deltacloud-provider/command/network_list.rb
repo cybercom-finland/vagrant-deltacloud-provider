@@ -15,7 +15,7 @@ module VagrantPlugins
           if argv.size == 0
             networks = env[:deltacloud_client].get_private_networks(env)
           elsif argv[0] == 'all'
-            networks = env[:deltacloud_client].get_all_networks(env)
+            networks = env[:deltacloud_client].list_networks(env)
           else
             fail Errors::UnrecognizedArgForCommand, cmd: name, arg: argv[0]
           end

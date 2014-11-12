@@ -118,7 +118,7 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
     context 'with id' do
       it 'returns the specified image' do
         config.stub(:image) { 'img-001' }
-        deltacloud.stub(:get_all_images).with(anything) do
+        deltacloud.stub(:list_images).with(anything) do
           [Item.new('img-001', 'image-01'),
            Item.new('img-002', 'image-02')]
         end
@@ -128,7 +128,7 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
     context 'with name' do
       it 'returns the specified image' do
         config.stub(:image) { 'image-02' }
-        deltacloud.stub(:get_all_images).with(anything) do
+        deltacloud.stub(:list_images).with(anything) do
           [Item.new('img-001', 'image-01'),
            Item.new('img-002', 'image-02')]
         end
@@ -138,7 +138,7 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
     context 'with invalid identifier' do
       it 'raise an error' do
         config.stub(:image) { 'not-existing' }
-        deltacloud.stub(:get_all_images).with(anything) do
+        deltacloud.stub(:list_images).with(anything) do
           [Item.new('img-001', 'image-01'),
            Item.new('img-002', 'image-02')]
         end

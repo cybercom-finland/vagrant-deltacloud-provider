@@ -12,7 +12,7 @@ module VagrantPlugins
         end
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
-          volumes = env[:deltacloud_client].get_all_volumes(env)
+          volumes = env[:deltacloud_client].list_volumes(env)
 
           rows = []
           volumes.each do |v|

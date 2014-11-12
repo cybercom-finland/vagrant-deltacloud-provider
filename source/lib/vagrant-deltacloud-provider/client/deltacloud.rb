@@ -48,7 +48,10 @@ module VagrantPlugins
 
       def list_instances(env)
         instance_list = get(env, '/instances')
-        JSON.parse(instance_list)
+        JSON.parse(instance_list)['instances'].map do |i|
+          Instance.new(
+            i['id'], i['name'])
+        end
       end
 
       def launch_instance(env, name, image_id, size_id, public_key_name)

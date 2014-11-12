@@ -3,6 +3,7 @@ module VagrantPlugins
     module Command
       COMMANDS = [
         { name: :'image-list', file: 'image_list' , clazz: 'ImageList' },
+        { name: :'instance-list', file: 'instance_list' , clazz: 'InstanceList' },
         { name: :'hardware-profile-list', file: 'hardware_profile_list', clazz: 'HardwareProfileList' },
         { name: :'network-list', file: 'network_list', clazz: 'NetworkList' },
         { name: :'volume-list', file: 'volume_list', clazz: 'VolumeList' },

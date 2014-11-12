@@ -4,18 +4,18 @@ require 'vagrant-deltacloud-provider/command/abstract_command'
 module VagrantPlugins
   module Deltacloud
     module Command
-      class ImageList < AbstractCommand
+      class InstanceList < AbstractCommand
         include VagrantPlugins::Deltacloud::Command::Utils
 
         def self.synopsis
-          I18n.t('vagrant_deltacloud.command.image_list_synopsis')
+          I18n.t('vagrant_deltacloud.command.instance_list_synopsis')
         end
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
           rows = []
           headers = %w(Id Name)
-          images = env[:deltacloud_client].list_images(env)
-          images.each { |image| rows << [image.id, image.name] }
+          images = env[:deltacloud_client].list_instances(env)
+          images.each { |instance| rows << [instance.id, instance.name] }
           display_table(env, headers, rows)
         end
       end

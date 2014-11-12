@@ -270,6 +270,8 @@ en:
         Available subcommands:
       image_list_synopsis : |-
         List available images
+      instance_list_synopsis : |-
+        List available instances
       hardware_profile_list_synopsis : |-
         List available hardware profiles
       network_list_synopsis : |-

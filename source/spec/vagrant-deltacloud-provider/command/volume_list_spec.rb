@@ -5,7 +5,7 @@ describe VagrantPlugins::Deltacloud::Command::VolumeList do
 
     let(:deltacloud) do
       double('deltacloud').tap do |deltacloud|
-        deltacloud.stub(:get_all_volumes) do
+        deltacloud.stub(:list_volumes) do
           [Volume.new('987', 'vol-01', '2', 'available', 'true', nil, nil),
            Volume.new('654', 'vol-02', '4', 'in-use', 'false', 'inst-01', '/dev/vdc')]
         end
@@ -25,7 +25,7 @@ describe VagrantPlugins::Deltacloud::Command::VolumeList do
     end
 
     it 'prints volumes list from server' do
-      deltacloud.should_receive(:get_all_volumes).with(env)
+      deltacloud.should_receive(:list_volumes).with(env)
       expect(env[:ui]).to receive(:info).with('
 +-----+--------+-----------+-----------+-------------------------------------+
 | Id  | Name   | Size (Go) | Status    | Attachment (instance id and device) |

@@ -21,6 +21,18 @@ module VagrantPlugins
         end
       end
 
+      class Instance < Item
+        def initialize(id, name)
+          super(id, name)
+        end
+
+        protected
+
+        def state
+          [@id, @name]
+        end
+      end
+
       class Image < Item
         attr_accessor :visibility
         attr_accessor :size

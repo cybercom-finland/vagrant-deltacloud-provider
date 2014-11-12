@@ -49,7 +49,7 @@ module VagrantPlugins
         config = env[:machine].provider_config
         return [] if config.networks.nil? || config.networks.empty?
         env[:ui].info(I18n.t('vagrant_deltacloud.finding_networks'))
-        all_networks = env[:deltacloud_client].get_all_networks(env)
+        all_networks = env[:deltacloud_client].list_networks(env)
         all_network_ids = all_networks.map { |v| v.id }
 
         networks = []
