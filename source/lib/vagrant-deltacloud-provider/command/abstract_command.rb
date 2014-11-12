@@ -16,8 +16,6 @@ module VagrantPlugins
             env[:ui] = @env.ui
           end
 
-          VagrantPlugins::Deltacloud::Action::ConnectDeltacloud.new(nil, env).call(env)
-
           cmd(name, @argv, env)
           @env.ui.info('')
         # rubocop:disable Lint/RescueException

@@ -15,7 +15,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_destroy' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_destroy
@@ -25,7 +24,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_provision' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_provision
@@ -35,7 +33,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_read_ssh_info' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(ReadSSHInfo)
       Action.action_read_ssh_info
     end
@@ -44,7 +41,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_read_state' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(ReadState)
       Action.action_read_state
     end
@@ -53,7 +49,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_ssh' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       Action.action_ssh
     end
@@ -62,7 +57,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_ssh_run' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_ssh_run
@@ -72,7 +66,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_up' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_up
@@ -82,7 +75,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_halt' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_halt
@@ -92,7 +84,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_suspend' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_suspend
@@ -102,7 +93,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_resume' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_resume
@@ -112,7 +102,6 @@ describe VagrantPlugins::Deltacloud::Action do
   describe 'action_reload' do
     it 'add others middleware to builder' do
       expect(builder).to receive(:use).with(ConfigValidate)
-      expect(builder).to receive(:use).with(ConnectDeltacloud)
       expect(builder).to receive(:use).with(Call, ReadState)
       # TODO, Impove this test to check what's happen after ReadState
       Action.action_reload

@@ -12,7 +12,6 @@ module VagrantPlugins
       def self.action_destroy
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
               b2.use Message, I18n.t('vagrant_deltacloud.not_created')
@@ -27,7 +26,6 @@ module VagrantPlugins
       def self.action_provision
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
               b2.use Message, I18n.t('vagrant_deltacloud.not_created')
@@ -45,7 +43,6 @@ module VagrantPlugins
       def self.action_read_ssh_info
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use ReadSSHInfo
         end
       end
@@ -56,7 +53,6 @@ module VagrantPlugins
       def self.action_read_state
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use ReadState
         end
       end
@@ -64,7 +60,6 @@ module VagrantPlugins
       def self.action_ssh
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
               b2.use Message, I18n.t('vagrant_deltacloud.not_created')
@@ -78,7 +73,6 @@ module VagrantPlugins
       def self.action_ssh_run
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
               b2.use Message, I18n.t('vagrant_deltacloud.not_created')
@@ -92,7 +86,6 @@ module VagrantPlugins
       def self.action_up
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
 
           b.use Call, ReadState do |env, b2|
             case env[:machine_state_id]
@@ -115,7 +108,6 @@ module VagrantPlugins
       def self.action_halt
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
               b2.use Message, I18n.t('vagrant_deltacloud.not_created')
@@ -131,7 +123,6 @@ module VagrantPlugins
       def self.action_suspend
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
               b2.use Message, I18n.t('vagrant_deltacloud.not_created')
@@ -149,7 +140,6 @@ module VagrantPlugins
       def self.action_resume
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             if env[:machine_state_id] == :not_created
               b2.use Message, I18n.t('vagrant_deltacloud.not_created')
@@ -163,7 +153,6 @@ module VagrantPlugins
       def self.action_reload
         new_builder.tap do |b|
           b.use ConfigValidate
-          b.use ConnectDeltacloud
           b.use Call, ReadState do |env, b2|
             case env[:machine_state_id]
             when :not_created
@@ -188,7 +177,6 @@ module VagrantPlugins
       # The autoload farm
       action_root = Pathname.new(File.expand_path('../action', __FILE__))
       autoload :Message, action_root.join('message')
-      autoload :ConnectDeltacloud, action_root.join('connect_deltacloud')
       autoload :CreateServer, action_root.join('create_server')
       autoload :DeleteServer, action_root.join('delete_server')
       autoload :StopServer, action_root.join('stop_server')
