@@ -36,7 +36,7 @@ module VagrantPlugins
         image_list = get(env, '/images')
         JSON.parse(image_list)['images'].map do |i|
           Image.new(
-            i['id'], i['name'])
+            i['id'], i['name'], i['visibility'], i['size'], i['min_ram'], i['min_disk'])
         end
       end
 
@@ -105,7 +105,10 @@ module VagrantPlugins
 
       def list_volumes(env)
         volume_list = get(env, '/storage_volumes')
-        JSON.parse(volume_list)
+        JSON.parse(volume_list)['storage_volumes'].map do |v|
+          Volume.new(
+            v['id'], v['name'], v['size'], v['status'], v['bootable'], v['instance_id'], v['device'])
+        end
       end
 
       def attach_volume(env, volume_id)
@@ -146,8 +149,14 @@ module VagrantPlugins
       end
 
       def list_networks(env)
-        response = get(env, '/networks')
-        JSON.parse(response)
+        network_list = get(env, '/networks')
+        JSON.parse(network_list)['networks'].map do |n|
+          Network.new(
+            n['id'], n['name'], n['state'], n['address_blocks'], n['subnets'].map do |s|
+              Subnet.new(s['id'], s['href'])
+            end
+          )
+        end
       end
     end
   end

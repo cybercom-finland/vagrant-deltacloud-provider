@@ -140,22 +140,42 @@ module VagrantPlugins
         end
       end
 
-      class Subnet < Item
-        attr_accessor :cidr
-        attr_accessor :enable_dhcp
-        attr_accessor :network_id
-
-        def initialize(id, name, cidr, enable_dhcp, network_id)
-          @cidr = cidr
-          @enable_dhcp = enable_dhcp
-          @network_id = network_id
+      class Network < Item
+        attr_accessor :status
+        attr_accessor :address_blocks
+        attr_accessor :subnets
+  
+        def initialize(id, name, statue, address_blocks, subnets)
+          @status = status
+          @address_blocks = address_blocks
+          @subnets = subnets
           super(id, name)
+        end
+  
+        protected
+  
+        def state
+          [@id, @name, @status, @address_blocks, @subnets]
+        end
+      end
+
+      class Subnet < Item
+
+        def initialize(id, name)
+          super(id, name)
+        end
+
+        def to_s
+          {
+            id: @id,
+            name: @name
+          }.to_json
         end
 
         protected
 
         def state
-          [@id, @name, @cidr, @enable_dhcp, @network_id]
+          [@id, @name]
         end
       end
     end

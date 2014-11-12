@@ -4,14 +4,8 @@ describe VagrantPlugins::Deltacloud::Command::NetworkList do
   describe 'cmd' do
 
     let(:deltacloud) do
-      double('deltacloud').tap do |neutron|
-        neutron.stub(:get_private_networks) do
-          [
-            Item.new('net-01', 'internal'),
-            Item.new('net-02', 'external')
-          ]
-        end
-        neutron.stub(:list_networks) do
+      double('deltacloud').tap do |deltacloud|
+        deltacloud.stub(:list_networks) do
           [
             Item.new('pub-01', 'public'),
             Item.new('net-01', 'internal'),
@@ -33,20 +27,6 @@ describe VagrantPlugins::Deltacloud::Command::NetworkList do
       @network_list_cmd = VagrantPlugins::Deltacloud::Command::NetworkList.new(nil, env)
     end
 
-    it 'prints network list from server' do
-      deltacloud.should_receive(:get_private_networks).with(env)
-
-      expect(env[:ui]).to receive(:info).with('
-+--------+----------+
-| Id     | Name     |
-+--------+----------+
-| net-01 | internal |
-| net-02 | external |
-+--------+----------+')
-
-      @network_list_cmd.cmd('network-list', [], env)
-    end
-
     it 'prints all networks list from server' do
       deltacloud.should_receive(:list_networks).with(env)
 
@@ -59,7 +39,7 @@ describe VagrantPlugins::Deltacloud::Command::NetworkList do
 | net-02 | external |
 +--------+----------+')
 
-      @network_list_cmd.cmd('network-list', ['all'], env)
+      @network_list_cmd.cmd('network-list', env)
     end
 
   end
