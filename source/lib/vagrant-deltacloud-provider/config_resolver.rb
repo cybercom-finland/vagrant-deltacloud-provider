@@ -94,7 +94,7 @@ module VagrantPlugins
       def generate_keypair(env)
         key = SSHKey.generate
         deltacloud = env[:deltacloud_client].deltacloud
-        generated_keyname = 'vagrant_key_' + SecureRandom.uuid;
+        generated_keyname = 'vagrant_key_' + SecureRandom.uuid
         deltacloud.add_public_key(env, generated_keyname, key.ssh_public_key)
         file_path = "#{env[:machine].data_dir}/#{generated_keyname}"
         File.write(file_path, key.private_key)

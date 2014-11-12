@@ -60,9 +60,8 @@ Vagrant.configure('2') do |config|
     os.username           = 'deltacloudUser'
     os.password           = 'deltacloudPassword'
     os.tenant_name        = 'myTenant'
-    os.flavor             = 'm1.small'
+    os.hardware_profile   = 'm1.small'
     os.image              = 'ubuntu'
-    os.floating_ip_pool   = 'publicNetwork'
   end
 end
 ```
@@ -89,11 +88,8 @@ This provider exposes quite a few provider-specific configuration options:
 * `server_name` - The name of the server within Deltacloud Cloud. This
   defaults to the name of the Vagrant machine (via `config.vm.define`), but
   can be overridden with this.
-* `flavor` - The name of the flavor to use for the VM
+* `hardware_profile` - The name of the hardware_profile to use for the VM
 * `image` - The name of the image to use for the VM
-* `floating_ip` - The floating IP to associate with the VM. This IP must be formerly allocated.
-* `floating_ip_pool` - The floating IP Pool from which a floating IP will be allocated to be associated with the VM. alternative to the `floating_ip` option.
-* `floating_ip_pool_always_allocate` - if set to true, vagrant will always allocate floating ip instead of trying to reuse unassigned ones
 * `availability_zone` - Nova Availability zone used when creating VM
 * `security_groups` - List of strings representing the security groups to apply. e.g. ['ssh', 'http']
 * `user_data` - String of User data to be sent to the newly created Deltacloud instance. Use this e.g. to inject a script at boot time.
@@ -175,11 +171,11 @@ end
 
 ### SSH authentication
 
-* `keypair_name` - The name of the key pair register in Deltacloud to associate with the VM. The public key should
+* `public_key_name` - The name of the key pair register in Deltacloud to associate with the VM. The public key should
   be the matching pair for the private key configured with `config.ssh.private_key_path` on Vagrant.
-* `public_key_path` - if `keypair_name` is not provided, the path to the public key will be used by vagrant to generate a keypair on the Deltacloud cloud. The keypair will be destroyed when the VM is destroyed.
+* `public_key_path` - if `public_key_name` is not provided, the path to the public key will be used by vagrant to generate a public key on the Deltacloud cloud. The public key will be destroyed when the VM is destroyed.
 
-If neither `keypair_name` nor `public_key_path` are set, vagrant will generate a new ssh key and automatically import it in Deltacloud.
+If neither `public_key_name` nor `public_key_path` are set, vagrant will generate a new ssh key and automatically import it in Deltacloud.
 
 * `ssh_disabled` - if set to `true`, all ssh actions managed by the provider will be disabled. We recommend to use this option only to create private VMs that won't be accessed directly from vagrant. Some actions might still want to connect with SSH (provisionners...). In this case, we will just warn you that the ssh action is likely to fail, but we won't forbid it
 
@@ -233,12 +229,11 @@ $ vagrant deltacloud
 Usage: vagrant deltacloud command
 
 Available subcommands:
-     image-list           List available images
-     flavor-list          List available flavors
-     network-list         List private networks in project
-     floatingip-list      List floating IP and floating IP pools
-     volume-list          List existing volumes
-     reset                Reset Vagrant Deltacloud provider to a clear state
+     image-list             List available images
+     hardware_profile-list  List available hardware_profiles
+     network-list           List private networks in project
+     volume-list            List existing volumes
+     reset                  Reset Vagrant Deltacloud provider to a clear state
 ```
 
 For instance `vagrant deltacloud image-list` lists images available in Glance.

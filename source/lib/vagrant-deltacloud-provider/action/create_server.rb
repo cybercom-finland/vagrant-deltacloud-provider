@@ -72,12 +72,12 @@ module VagrantPlugins
 
           @logger.info(log)
 
-          image_id = options[:image].id;
-          hardware_profile_id = options[:hardware_profile].id;
-          public_key_name = options[:public_key_name];
+          image_id = options[:image].id
+          hardware_profile_id = options[:hardware_profile].id
+          public_key_name = options[:public_key_name]
 
           deltacloud.add_public_key(env, public_key_name, public_key)
-          deltacloud.launch_instance(env, server_name, image_id, size_id, public_key_name)
+          deltacloud.launch_instance(env, server_name, image_id, hardware_profile_id, public_key_name)
         end
 
         def waiting_for_server_to_be_built(env, server_id, retry_interval = 3, timeout = 200)

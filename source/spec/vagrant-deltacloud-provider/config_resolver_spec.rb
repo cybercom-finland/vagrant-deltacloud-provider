@@ -107,7 +107,7 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
         config.stub(:hardware_profile) { 'not-existing' }
         deltacloud.stub(:list_hardware_profiles).with(anything) do
           [HardwareProfile.new('hp-001', 'hardware_profile-01', 2, 1024, 10),
-          HardwareProfile.new('hp-002', 'hardware_profile-02', 4, 2048, 50)]
+           HardwareProfile.new('hp-002', 'hardware_profile-02', 4, 2048, 50)]
         end
         expect { @action.resolve_hardware_profile(env) }.to raise_error(Errors::NoMatchingHardwareProfile)
       end
