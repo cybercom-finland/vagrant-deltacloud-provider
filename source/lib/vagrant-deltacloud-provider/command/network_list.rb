@@ -15,7 +15,7 @@ module VagrantPlugins
           networks = env[:deltacloud_client].list_networks(env)
           rows = []
           networks.each do |n|
-            rows << [n.id, n.name, n.status, n.address_blocks, n.subnets.map do |s| s.to_s end]
+            rows << [n.id, n.name, n.status, n.address_blocks, n.subnets.map { |s| s.to_s }]
           end
           display_table(env, ['Id', 'Name', 'Status', 'Address blocks', 'Subnets'], rows)
         end

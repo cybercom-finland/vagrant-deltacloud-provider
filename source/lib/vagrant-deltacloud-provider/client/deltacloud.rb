@@ -24,8 +24,8 @@ module VagrantPlugins
         response = post(
           env,
           '/keys',
-            'name' =>       name,
-            'public_key' => public_key
+          'name' =>       name,
+          'public_key' => public_key
         )
         JSON.parse(response)
       end
@@ -59,10 +59,10 @@ module VagrantPlugins
         response = post(
           env,
           '/instances',
-            'name' =>     name,
-            'image_id' => image_id,
-            'hwp_id' =>   size_id,
-            'keyname' =>  public_key_name
+          'name' =>     name,
+          'image_id' => image_id,
+          'hwp_id' =>   size_id,
+          'keyname' =>  public_key_name
         )
         JSON.parse(response)
       end
@@ -91,8 +91,8 @@ module VagrantPlugins
         response = post(
           env,
           '/storage_volumes',
-            'name' =>     volume_name,
-            'capacity' => volume_size_in_gbs
+          'name' =>     volume_name,
+          'capacity' => volume_size_in_gbs
         )
         JSON.parse(response)
       end
@@ -129,8 +129,8 @@ module VagrantPlugins
         response = post(
           env,
           '/images',
-            'instance_id' =>  instance_id,
-            'name'  =>        image_name
+          'instance_id' =>  instance_id,
+          'name'  =>        image_name
         )
         JSON.parse(response)
       end

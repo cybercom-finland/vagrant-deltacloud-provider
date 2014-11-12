@@ -144,23 +144,22 @@ module VagrantPlugins
         attr_accessor :status
         attr_accessor :address_blocks
         attr_accessor :subnets
-  
-        def initialize(id, name, statue, address_blocks, subnets)
+
+        def initialize(id, name, status, address_blocks, subnets)
           @status = status
           @address_blocks = address_blocks
           @subnets = subnets
           super(id, name)
         end
-  
+
         protected
-  
+
         def state
           [@id, @name, @status, @address_blocks, @subnets]
         end
       end
 
       class Subnet < Item
-
         def initialize(id, name)
           super(id, name)
         end

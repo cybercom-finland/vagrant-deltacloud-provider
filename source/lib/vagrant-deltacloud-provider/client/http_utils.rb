@@ -52,7 +52,7 @@ module VagrantPlugins
           body,
           headers: headers) { |res| handle_response(res) }.tap do
             @logger.debug("#{calling_method} - end")
-        end
+          end
       end
 
       def delete(env, url, headers = {})
