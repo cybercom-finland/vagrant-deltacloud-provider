@@ -4,7 +4,6 @@ require 'sshkey'
 
 include VagrantPlugins::Deltacloud::Action
 include VagrantPlugins::Deltacloud::HttpUtils
-include VagrantPlugins::Deltacloud::Domain
 
 describe VagrantPlugins::Deltacloud::Action::CreateServer do
 

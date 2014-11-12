@@ -2,7 +2,6 @@ require 'vagrant-deltacloud-provider/spec_helper'
 
 include VagrantPlugins::Deltacloud::Action
 include VagrantPlugins::Deltacloud::HttpUtils
-include VagrantPlugins::Deltacloud::Domain
 
 describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
 
