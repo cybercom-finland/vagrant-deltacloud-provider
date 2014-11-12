@@ -34,7 +34,10 @@ module VagrantPlugins
 
       def list_images(env)
         image_list = get(env, '/images')
-        JSON.parse(image_list)
+        JSON.parse(image_list)['images'].map do |i|
+          Image.new(
+            i['id'], i['name'])
+        end
       end
 
       def list_hardware_profiles(env)
