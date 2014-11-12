@@ -14,7 +14,7 @@ module VagrantPlugins
           with_target_vms(nil, provider: :deltacloud) do |machine|
             env[:machine] = machine
             env[:ui] = @env.ui
-            env[:deltacloud_client] = Deltacloud.new
+            env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           end
 
           cmd(name, @argv, env)

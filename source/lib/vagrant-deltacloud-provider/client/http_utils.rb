@@ -14,7 +14,7 @@ module VagrantPlugins
         calling_method = caller[0][/`.*'/][1..-2]
         @logger.debug("#{calling_method} - start")
 
-        headers.merge!(accept: json, content_type: json)
+        headers.merge!(accept: 'json', content_type: 'json')
 
         log_request(:GET, url, headers)
 
@@ -32,7 +32,7 @@ module VagrantPlugins
         calling_method = caller[0][/`.*'/][1..-2]
         @logger.debug("#{calling_method} - start")
 
-        headers.merge!(accept: json, content_type: json)
+        headers.merge!(accept: 'json', content_type: 'json')
 
         log_request(:POST, url, body, headers)
 
@@ -51,7 +51,7 @@ module VagrantPlugins
         calling_method = caller[0][/`.*'/][1..-2]
         @logger.debug("#{calling_method} - start")
 
-        headers.merge!(accept: json, content_type: json)
+        headers.merge!(accept: 'json', content_type: 'json')
 
         log_request(:DELETE, url, headers)
 
