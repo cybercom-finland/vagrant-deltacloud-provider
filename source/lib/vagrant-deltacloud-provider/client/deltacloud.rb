@@ -40,9 +40,10 @@ module VagrantPlugins
       def list_hardware_profiles(env)
         hardware_profile_list = get(env, '/hardware_profiles')
         JSON.parse(hardware_profile_list)['hardware_profiles'].map do |hp|
-          HardwareProfile.new(hp['id'], hp['name'], hp['properties']['cpu'],
+          HardwareProfile.new(
+            hp['id'], hp['name'], hp['properties']['cpu'],
             hp['properties']['memory'], hp['properties']['storage'])
-       end
+        end
       end
 
       def list_instances(env)
