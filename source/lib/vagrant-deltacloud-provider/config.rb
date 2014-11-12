@@ -12,9 +12,9 @@ module VagrantPlugins
       #
       attr_accessor :deltacloud_api_url
 
-      # The flavor of server to launch, either the ID or name. This
+      # The hardware profile of server to launch, either the ID or name. This
       # can also be a regular expression to partially match a name.
-      attr_accessor :flavor
+      attr_accessor :hardware_profile
 
       # The name or ID of the image to use. This can also be a regular
       # expression to partially match a name.
@@ -35,10 +35,10 @@ module VagrantPlugins
       # @return [String]
       attr_accessor :username
 
-      # The name of the keypair to use.
+      # The name of the public key to use.
       #
       # @return [String]
-      attr_accessor :keypair_name
+      attr_accessor :public_key_name
 
       # The SSH username to use with this Deltacloud instance. This overrides
       # the `config.ssh.username` variable.
@@ -56,22 +56,6 @@ module VagrantPlugins
       #
       # @return [Array]
       attr_accessor :rsync_includes
-
-      # The floating IP address from the IP pool which will be assigned to the instance.
-      #
-      # @return [String]
-      attr_accessor :floating_ip
-
-      # The floating IP pool from where new IPs will be allocated
-      #
-      # @return [String]
-      attr_accessor :floating_ip_pool
-
-      # if set to true, vagrant will always allocate floating ip instead of trying to reuse unassigned ones
-      # default to false
-      #
-      # @return [Boolean]
-      attr_accessor :floating_ip_pool_always_allocate
 
       # Sync folder method. Can be either "rsync" or "none"
       #
@@ -126,18 +110,15 @@ module VagrantPlugins
       def initialize
         @password = UNSET_VALUE
         @deltacloud_api_url = UNSET_VALUE
-        @flavor = UNSET_VALUE
+        @hardware_profile = UNSET_VALUE
         @image = UNSET_VALUE
         @tenant_name = UNSET_VALUE
         @server_name = UNSET_VALUE
         @username = UNSET_VALUE
         @rsync_includes = []
-        @keypair_name = UNSET_VALUE
+        @public_key_name = UNSET_VALUE
         @ssh_username = UNSET_VALUE
         @ssh_timeout = UNSET_VALUE
-        @floating_ip = UNSET_VALUE
-        @floating_ip_pool = UNSET_VALUE
-        @floating_ip_pool_always_allocate = UNSET_VALUE
         @sync_method = UNSET_VALUE
         @availability_zone = UNSET_VALUE
         @networks = []
@@ -184,17 +165,14 @@ module VagrantPlugins
       def finalize!
         @password = nil if @password == UNSET_VALUE
         @deltacloud_api_url = nil if @deltacloud_api_url == UNSET_VALUE
-        @flavor = nil if @flavor == UNSET_VALUE
+        @hardware_profile = nil if @hardware_profile == UNSET_VALUE
         @image = nil if @image == UNSET_VALUE
         @tenant_name = nil if @tenant_name == UNSET_VALUE
         @server_name = nil if @server_name == UNSET_VALUE
         @username = nil if @username == UNSET_VALUE
         @rsync_includes = nil if @rsync_includes.empty?
-        @floating_ip = nil if @floating_ip == UNSET_VALUE
-        @floating_ip_pool = nil if @floating_ip_pool == UNSET_VALUE
-        @floating_ip_pool_always_allocate = false if floating_ip_pool_always_allocate == UNSET_VALUE
         @sync_method = 'rsync' if @sync_method == UNSET_VALUE
-        @keypair_name = nil if @keypair_name == UNSET_VALUE
+        @public_key_name = nil if @public_key_name == UNSET_VALUE
         @public_key_path = nil if @public_key_path == UNSET_VALUE
         @availability_zone = nil if @availability_zone == UNSET_VALUE
         @scheduler_hints = nil if @scheduler_hints == UNSET_VALUE
@@ -226,9 +204,9 @@ module VagrantPlugins
         validate_ssh_timeout(errors)
 
         if machine.config.ssh.private_key_path
-          puts I18n.t('vagrant_deltacloud.config.keypair_name_required').yellow unless @keypair_name || @public_key_path
+          puts I18n.t('vagrant_deltacloud.config.public_key_name_required').yellow unless @public_key_name || @public_key_path
         else
-          errors << I18n.t('vagrant_deltacloud.config.private_key_missing') if @keypair_name || @public_key_path
+          errors << I18n.t('vagrant_deltacloud.config.private_key_missing') if @public_key_name || @public_key_path
         end
 
         {

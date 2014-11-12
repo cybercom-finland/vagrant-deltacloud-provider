@@ -11,16 +11,16 @@ module VagrantPlugins
         22
       end
 
-      def resolve_flavor(env)
-        @logger.info 'Resolving flavor'
+      def resolve_hardware_profile(env)
+        @logger.info 'Resolving hardware profile'
         config = env[:machine].provider_config
         deltacloud = env[:deltacloud_client].deltacloud
-        env[:ui].info(I18n.t('vagrant_deltacloud.finding_flavor'))
-        flavors = deltacloud.get_all_flavors(env)
-        @logger.info "Finding flavor matching name '#{config.flavor}'"
-        flavor = find_matching(flavors, config.flavor)
-        fail Errors::NoMatchingFlavor unless flavor
-        flavor
+        env[:ui].info(I18n.t('vagrant_deltacloud.finding_hardware_profile'))
+        hardware_profiles = deltacloud.list_hardware_profiles(env)
+        @logger.info "Finding hardware profile matching name '#{config.hardware_profile}'"
+        hardware_profile = find_matching(hardware_profiles, config.hardware_profile)
+        fail Errors::NoMatchingHardwareProfile unless hardware_profile
+        hardware_profile
       end
 
       def resolve_image(env)
@@ -29,29 +29,18 @@ module VagrantPlugins
         return nil if config.image.nil?
         deltacloud = env[:deltacloud_client].deltacloud
         env[:ui].info(I18n.t('vagrant_deltacloud.finding_image'))
-        images = deltacloud.get_all_images(env)
+        images = deltacloud.list_images(env)
         @logger.info "Finding image matching name '#{config.image}'"
         image = find_matching(images, config.image)
         fail Errors::NoMatchingImage unless image
         image
       end
 
-      def resolve_floating_ip(env)
+      def resolve_public_key(env)
         config = env[:machine].provider_config
         deltacloud = env[:deltacloud_client].deltacloud
-        return config.floating_ip if config.floating_ip
-        fail Errors::UnableToResolveFloatingIP unless config.floating_ip_pool
-        deltacloud.get_all_floating_ips(env).each do |single|
-          return single.ip if single.pool == config.floating_ip_pool && single.instance_id.nil?
-        end unless config.floating_ip_pool_always_allocate
-        deltacloud.allocate_floating_ip(env, config.floating_ip_pool).ip
-      end
-
-      def resolve_keypair(env)
-        config = env[:machine].provider_config
-        deltacloud = env[:deltacloud_client].deltacloud
-        return config.keypair_name if config.keypair_name
-        return deltacloud.import_keypair_from_file(env, config.public_key_path) if config.public_key_path
+        return config.public_key_name if config.public_key_name
+        return deltacloud.import_public_key_from_file(env, config.public_key_path) if config.public_key_path
         generate_keypair(env)
       end
 
@@ -105,7 +94,8 @@ module VagrantPlugins
       def generate_keypair(env)
         key = SSHKey.generate
         deltacloud = env[:deltacloud_client].deltacloud
-        generated_keyname = deltacloud.import_keypair(env, key.ssh_public_key)
+        generated_keyname = 'vagrant_key_' + SecureRandom.uuid;
+        deltacloud.add_public_key(env, generated_keyname, key.ssh_public_key)
         file_path = "#{env[:machine].data_dir}/#{generated_keyname}"
         File.write(file_path, key.private_key)
         File.chmod(0600, file_path)

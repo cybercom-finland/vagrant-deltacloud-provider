@@ -32,8 +32,8 @@ module VagrantPlugins
         error_key(:create_bad_state)
       end
 
-      class NoMatchingFlavor < VagrantDeltacloudError
-        error_key(:no_matching_flavor)
+      class NoMatchingHardwareProfile < VagrantDeltacloudError
+        error_key(:no_matching_hardware_profile)
       end
 
       class NoMatchingImage < VagrantDeltacloudError
@@ -58,10 +58,6 @@ module VagrantPlugins
 
       class UnrecognizedArgForCommand < VagrantDeltacloudError
         error_key(:unrecognized_arg_for_command)
-      end
-
-      class UnableToResolveFloatingIP < VagrantDeltacloudError
-        error_key(:unable_to_resolve_floating_ip)
       end
 
       class UnableToResolveIP < VagrantDeltacloudError
@@ -138,14 +134,6 @@ module VagrantPlugins
 
       class VolumeServiceUnavailable < VagrantDeltacloudError
         error_key(:volume_service_unavailable)
-      end
-
-      class FloatingIPAlreadyAssigned < VagrantDeltacloudError
-        error_key(:floating_ip_already_assigned)
-      end
-
-      class FloatingIPNotAvailable < VagrantDeltacloudError
-        error_key(:floating_ip_not_available)
       end
 
       class ServerStatusError < VagrantDeltacloudError

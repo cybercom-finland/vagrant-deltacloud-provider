@@ -3,9 +3,8 @@ module VagrantPlugins
     module Command
       COMMANDS = [
         { name: :'image-list', file: 'image_list' , clazz: 'ImageList' },
-        { name: :'flavor-list', file: 'flavor_list', clazz: 'FlavorList' },
+        { name: :'hardware-profile-list', file: 'hardware_profile_list', clazz: 'HardwareProfileList' },
         { name: :'network-list', file: 'network_list', clazz: 'NetworkList' },
-        { name: :'floatingip-list', file: 'floatingip_list', clazz: 'FloatingIpList' },
         { name: :'volume-list', file: 'volume_list', clazz: 'VolumeList' },
         { name: :'reset', file: 'reset', clazz: 'Reset' }
       ]

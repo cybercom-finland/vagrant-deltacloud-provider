@@ -6,10 +6,7 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
     double('config').tap do |config|
       config.stub(:tenant_name) { 'testTenant' }
       config.stub(:server_name) { 'testName' }
-      config.stub(:floating_ip) { nil }
-      config.stub(:floating_ip_pool) { nil }
-      config.stub(:floating_ip_pool_always_allocate) { false }
-      config.stub(:keypair_name) { nil }
+      config.stub(:public_key_name) { nil }
       config.stub(:public_key_path) { nil }
       config.stub(:networks) { nil }
       config.stub(:volumes) { nil }
@@ -23,14 +20,6 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
     end
   end
 
-  let(:deltacloud) do
-    double('deltacloud').tap do |deltacloud|
-      deltacloud.stub(:get_all_floating_ips).with(anything) do
-        [FloatingIP.new('80.81.82.83', 'pool-1', nil), FloatingIP.new('30.31.32.33', 'pool-2', '1234')]
-      end
-    end
-  end
-
   let(:env) do
     Hash.new.tap do |env|
       env[:ui] = double('ui')
@@ -40,7 +29,6 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
       env[:machine].stub(:data_dir) { '/data/dir' }
       env[:machine].stub(:config) { machine_config }
       env[:deltacloud_client] = double('deltacloud_client')
-      env[:deltacloud_client].stub(:deltacloud) { deltacloud }
     end
   end
 
@@ -93,42 +81,42 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
     end
   end
 
-  describe 'resolve_flavor' do
+  describe 'resolve_hardware_profile' do
     context 'with id' do
-      it 'returns the specified flavor' do
-        config.stub(:flavor) { 'fl-001' }
-        deltacloud.stub(:get_all_flavors).with(anything) do
-          [Flavor.new('fl-001', 'flavor-01', 2, 1024, 10),
-           Flavor.new('fl-002', 'flavor-02', 4, 2048, 50)]
+      it 'returns the specified hardware_profile' do
+        config.stub(:hardware_profile) { 'hp-001' }
+        deltacloud.stub(:list_hardware_profiles).with(anything) do
+          [HardwareProfile.new('hp-001', 'hardware_profile-01', 2, 1024, 10),
+           HardwareProfile.new('hp-002', 'hardware_profile-02', 4, 2048, 50)]
         end
-        @action.resolve_flavor(env).should eq(Flavor.new('fl-001', 'flavor-01', 2, 1024, 10))
+        @action.resolve_hardware_profile(env).should eq(HardwareProfile.new('hp-001', 'hardware-profile-01', 2, 1024, 10))
       end
     end
     context 'with name' do
-      it 'returns the specified flavor' do
-        config.stub(:flavor) { 'flavor-02' }
-        deltacloud.stub(:get_all_flavors).with(anything) do
-          [Flavor.new('fl-001', 'flavor-01', 2, 1024, 10),
-           Flavor.new('fl-002', 'flavor-02', 4, 2048, 50)]
+      it 'returns the specified hardware_profile' do
+        config.stub(:hardware_profile) { 'hardware_profile-02' }
+        deltacloud.stub(:list_hardware_profiles).with(anything) do
+          [HardwareProfile.new('hp-001', 'hardware_profile-01', 2, 1024, 10),
+           HardwareProfile.new('hp-002', 'hardware_profile-02', 4, 2048, 50)]
         end
-        @action.resolve_flavor(env).should eq(Flavor.new('fl-002', 'flavor-02', 4, 2048, 50))
+        @action.resolve_hardware_profile(env).should eq(HardwareProfile.new('hp-002', 'hardware-profile-02', 4, 2048, 50))
       end
     end
     context 'with invalid identifier' do
       it 'raise an error' do
-        config.stub(:flavor) { 'not-existing' }
-        deltacloud.stub(:get_all_flavors).with(anything) do
-          [Flavor.new('fl-001', 'flavor-01', 2, 1024, 10),
-           Flavor.new('fl-002', 'flavor-02', 4, 2048, 50)]
+        config.stub(:hardware_profile) { 'not-existing' }
+        deltacloud.stub(:list_hardware_profiles).with(anything) do
+          [HardwareProfile.new('hp-001', 'hardware_profile-01', 2, 1024, 10),
+          HardwareProfile.new('hp-002', 'hardware_profile-02', 4, 2048, 50)]
         end
-        expect { @action.resolve_flavor(env) }.to raise_error(Errors::NoMatchingFlavor)
+        expect { @action.resolve_hardware_profile(env) }.to raise_error(Errors::NoMatchingHardwareProfile)
       end
     end
   end
 
   describe 'resolve_image' do
     context 'with id' do
-      it 'returns the specified flavor' do
+      it 'returns the specified image' do
         config.stub(:image) { 'img-001' }
         deltacloud.stub(:get_all_images).with(anything) do
           [Item.new('img-001', 'image-01'),
@@ -138,7 +126,7 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
       end
     end
     context 'with name' do
-      it 'returns the specified flavor' do
+      it 'returns the specified image' do
         config.stub(:image) { 'image-02' }
         deltacloud.stub(:get_all_images).with(anything) do
           [Item.new('img-001', 'image-01'),
@@ -159,108 +147,47 @@ describe VagrantPlugins::Deltacloud::ConfigResolver do
     end
   end
 
-  describe 'resolve_floating_ip' do
-    context 'with config.floating_ip specified' do
-      it 'return the specified floating ip' do
-        config.stub(:floating_ip) { '80.80.80.80' }
-        @action.resolve_floating_ip(env).should eq('80.80.80.80')
+  describe 'resolve_public_key_name' do
+    context 'with public_key_name provided' do
+      it 'return the provided public_key_name' do
+        config.stub(:public_key_name) { 'my-public_key' }
+        @action.resolve_public_key_name(env).should eq('my-public_key')
       end
     end
 
-    context 'with config.floating_pool specified' do
-      context 'if any ip in the same pool is available' do
-        context 'with config.floating_pool_always_allocate true' do
-          it 'allocate a new floating_ip from the pool' do
-            config.stub(:floating_ip_pool_always_allocate) { true }
-            deltacloud.stub(:get_all_floating_ips).with(anything) do
-              [FloatingIP.new('80.81.82.84', 'pool-1', '1234'),
-               FloatingIP.new('80.81.82.83', 'pool-1', nil)]
-            end
-            deltacloud.stub(:allocate_floating_ip).with(env, 'pool-1') do
-              FloatingIP.new('80.81.82.84', 'pool-1', nil)
-            end
-            config.stub(:floating_ip_pool) { 'pool-1' }
-            @action.resolve_floating_ip(env).should eq('80.81.82.84')
-          end
-        end
-
-        context 'with config.floating_pool_always_allocate false' do
-          it 'return one of the available ips' do
-            config.stub(:floating_ip_pool_always_allocate) { false }
-            deltacloud.stub(:get_all_floating_ips).with(anything) do
-              [FloatingIP.new('80.81.82.84', 'pool-1', '1234'),
-               FloatingIP.new('80.81.82.83', 'pool-1', nil)]
-            end
-            config.stub(:floating_ip_pool) { 'pool-1' }
-            @action.resolve_floating_ip(env).should eq('80.81.82.83')
-          end
-        end
-      end
-
-      context 'if no ip in the same pool is available' do
-        it 'allocate a new floating_ip from the pool' do
-          deltacloud.stub(:get_all_floating_ips).with(anything) do
-            [FloatingIP.new('80.81.82.83', 'pool-1', '1234')]
-          end
-          deltacloud.stub(:allocate_floating_ip).with(env, 'pool-1') do
-            FloatingIP.new('80.81.82.84', 'pool-1', nil)
-          end
-          config.stub(:floating_ip_pool) { 'pool-1' }
-          @action.resolve_floating_ip(env).should eq('80.81.82.84')
-        end
-      end
-    end
-
-    context 'with neither floating_ip nor floating_ip_pool' do
-      it 'fails with an UnableToResolveFloatingIP error' do
-        config.stub(:floating_ip) { nil }
-        config.stub(:floating_ip_pool) { nil }
-        expect { @action.resolve_floating_ip(env) }.to raise_error(Errors::UnableToResolveFloatingIP)
-      end
-    end
-  end
-
-  describe 'resolve_keypair' do
-    context 'with keypair_name provided' do
-      it 'return the provided keypair_name' do
-        config.stub(:keypair_name) { 'my-keypair' }
-        @action.resolve_keypair(env).should eq('my-keypair')
-      end
-    end
-
-    context 'with keypair_name and public_key_path provided' do
-      it 'return the provided keypair_name' do
-        config.stub(:keypair_name) { 'my-keypair' }
+    context 'with public_key_name and public_key_path provided' do
+      it 'return the provided public_key_name' do
+        config.stub(:public_key_name) { 'my-public_key' }
         config.stub(:public_key_path) { '/path/to/key' }
-        @action.resolve_keypair(env).should eq('my-keypair')
+        @action.resolve_public_key_name(env).should eq('my-public_key')
       end
     end
 
     context 'with public_key_path provided' do
-      it 'return the keypair_name created into deltacloud' do
+      it 'return the public_key_name created into deltacloud' do
         config.stub(:public_key_path) { '/path/to/key' }
-        deltacloud.stub(:import_keypair_from_file).with(env, '/path/to/key') { 'my-keypair-imported' }
-        @action.resolve_keypair(env).should eq('my-keypair-imported')
+        deltacloud.stub(:import_public_key_from_file).with(env, '/path/to/key') { 'my-public_key-imported' }
+        @action.resolve_public_key_name(env).should eq('my-public_key-imported')
       end
     end
 
-    context 'with no keypair_name and no public_key_path provided' do
-      it 'generates a new keypair and return the keypair name imported into deltacloud' do
-        config.stub(:keypair_name) { nil }
+    context 'with no public_key_name and no public_key_path provided' do
+      it 'generates a new public_key_name and return the public_key name imported into deltacloud' do
+        config.stub(:public_key_name) { nil }
         config.stub(:public_key_path) { nil }
-        @action.stub(:generate_keypair) { 'my-keypair-imported' }
-        @action.resolve_keypair(env).should eq('my-keypair-imported')
+        @action.stub(:generate_keypair) { 'my-public_key-imported' }
+        @action.resolve_public_key_name(env).should eq('my-public_key-imported')
       end
     end
   end
 
   describe 'generate_keypair' do
     it 'returns a generated keypair name imported into deltacloud' do
-      deltacloud.stub(:import_keypair) { 'my-keypair-imported' }
+      deltacloud.stub(:import_public_key) { 'my-public_key-imported' }
       SSHKey.stub(:generate) { ssh_key }
-      File.should_receive(:write).with('/data/dir/my-keypair-imported', 'private key')
-      File.should_receive(:chmod).with(0600, '/data/dir/my-keypair-imported')
-      @action.generate_keypair(env).should eq('my-keypair-imported')
+      File.should_receive(:write).with('/data/dir/my-public_key-imported', 'private key')
+      File.should_receive(:chmod).with(0600, '/data/dir/my-public_key-imported')
+      @action.generate_keypair(env).should eq('my-public_key-imported')
     end
   end
 

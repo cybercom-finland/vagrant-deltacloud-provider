@@ -22,7 +22,6 @@ EOL
 
 cat > /tmp/vagrant_machines <<EOL
 test-basic
-test-floating-ip-pool
 test-ssh-public-key-path
 test-availabilty-zone
 EOL
@@ -106,7 +105,6 @@ runSingleTest() {
 
 #
 # $1 - Instance name prefix
-# $2 - Floating IP tu use
 #
 function runAllTests() {
     ip=${1}
@@ -122,14 +120,11 @@ function runAllTests() {
         currentTest=$(head -n ${i} < /tmp/images_with_ssh_user | tail -n 1)
         export OS_SERVER_NAME="${machine}_${i}"
         export OS_IMAGE=$(echo "${currentTest}" | cut -f1 -d";")
-        export OS_FLOATING_IP="${ip}"
         export OS_SSH_USERNAME=$(echo "${currentTest}" | cut -f2 -d";")
         runSingleTest "${machine}"
       done < /tmp/vagrant_machines
     done
 }
-
-runAllTests "${OS_FLOATING_IP}"
 
 echo ''
 echo '################################################################################################'

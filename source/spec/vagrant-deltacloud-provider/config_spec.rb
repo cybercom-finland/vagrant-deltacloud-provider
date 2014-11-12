@@ -13,16 +13,15 @@ describe VagrantPlugins::Deltacloud::Config do
     its(:password)  { should be_nil }
     its(:deltacloud_compute_url) { should be_nil }
     its(:deltacloud_auth_url) { should be_nil }
-    its(:flavor)   { should be_nil }
+    its(:hardware_profile)   { should be_nil }
     its(:image)    { should be_nil }
     its(:server_name) { should be_nil }
     its(:username) { should be_nil }
     its(:rsync_includes) { should be_nil }
-    its(:keypair_name) { should be_nil }
+    its(:public_key_name) { should be_nil }
     its(:public_key_path) { should be_nil }
     its(:availability_zone) { should be_nil }
     its(:ssh_username) { should be_nil }
-    its(:floating_ip_pool_always_allocate) { should eq(false) }
     its(:scheduler_hints) { should be_nil }
     its(:security_groups) { should be_nil }
     its(:user_data) { should be_nil }
@@ -34,13 +33,12 @@ describe VagrantPlugins::Deltacloud::Config do
       :password,
       :deltacloud_compute_url,
       :deltacloud_auth_url,
-      :flavor,
+      :hardware_profile,
       :image,
       :server_name,
       :username,
-      :keypair_name,
+      :public_key_name,
       :ssh_username,
-      :floating_ip_pool_always_allocate,
       :scheduler_hints,
       :security_groups,
       :user_data,
@@ -128,7 +126,7 @@ describe VagrantPlugins::Deltacloud::Config do
       machine.stub(:config) { config }
       subject.username = 'foo'
       subject.password = 'bar'
-      subject.keypair_name = 'keypair'
+      subject.public_key_name = 'public_key'
     end
 
     subject do
@@ -162,7 +160,7 @@ describe VagrantPlugins::Deltacloud::Config do
     end
 
     context 'private_key_path is not set' do
-      context 'keypair_name or public_key_path is set' do
+      context 'public_key_name or public_key_path is set' do
         it 'should error if not given' do
           ssh.stub(:private_key_path) { nil }
           subject.public_key_path = 'public_key'

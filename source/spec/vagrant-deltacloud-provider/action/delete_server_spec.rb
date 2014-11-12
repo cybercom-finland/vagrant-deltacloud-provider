@@ -5,7 +5,7 @@ describe VagrantPlugins::Deltacloud::Action::DeleteServer do
   let(:deltacloud) do
     double('deltacloud').tap do |app|
       app.stub(:delete_server)
-      app.stub(:delete_keypair_if_vagrant)
+      app.stub(:delete_public_key)
     end
   end
 
@@ -37,7 +37,7 @@ describe VagrantPlugins::Deltacloud::Action::DeleteServer do
     context 'when id is present' do
       it 'delete server' do
         expect(deltacloud).to receive(:delete_server).with(env, 'server_id')
-        expect(deltacloud).to receive(:delete_keypair_if_vagrant).with(env, 'server_id')
+        expect(deltacloud).to receive(:delete_public_key).with(env, 'server_id')
         @action = DeleteServer.new(app, nil)
         @action.call(env)
       end
@@ -45,7 +45,7 @@ describe VagrantPlugins::Deltacloud::Action::DeleteServer do
     context 'when id is not present' do
       it 'delete server' do
         expect(deltacloud).should_not_receive(:delete_server)
-        expect(deltacloud).should_not_receive(:delete_keypair_if_vagrant)
+        expect(deltacloud).should_not_receive(:delete_public_key)
         @action = DeleteServer.new(app, nil)
         @action.call(env)
       end

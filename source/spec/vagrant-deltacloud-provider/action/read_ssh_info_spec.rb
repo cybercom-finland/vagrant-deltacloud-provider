@@ -12,19 +12,9 @@ describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
       config.stub(:username) { 'username' }
       config.stub(:password) { 'password' }
       config.stub(:ssh_username) { 'test_username' }
-      config.stub(:floating_ip) { nil }
-      config.stub(:floating_ip_pool) { nil }
-      config.stub(:keypair_name) { nil }
+      config.stub(:public_key_name) { nil }
       config.stub(:public_key_path) { nil }
       config.stub(:ssh_disabled) { false }
-    end
-  end
-
-  let(:deltacloud) do
-    double('deltacloud').tap do |deltacloud|
-      deltacloud.stub(:get_all_floating_ips).with(anything) do
-        [FloatingIP.new('80.81.82.83', 'pool-1', nil), FloatingIP.new('30.31.32.33', 'pool-2', '1234')]
-      end
     end
   end
 
@@ -69,7 +59,7 @@ describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
   describe 'call' do
     context 'when called three times' do
       it 'read ssh info only once' do
-        config.stub(:keypair_name) { 'my_keypair' }
+        config.stub(:public_key_name) { 'my_public_key' }
         @action.stub(:read_ssh_info) { { host: '', port: '', username: '' } }
         expect(@action).to receive(:read_ssh_info).exactly(1).times
         expect(app).to receive(:call)
@@ -79,73 +69,8 @@ describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
   end
 
   describe 'read_ssh_info' do
-    context 'with deprecated ssh_username specified' do
-      context 'with ssh.username specified' do
-        it 'returns ssh.username' do
-          ssh_config.stub(:username) { 'sshuser' }
-          config.stub(:ssh_username) { 'test_username' }
-          config.stub(:floating_ip) { '80.80.80.80' }
-          config.stub(:keypair_name) { 'my_keypair' }
-          @action.read_ssh_info(env).should eq(host: '80.80.80.80', port: 22, username: 'sshuser', log_level: 'ERROR')
-        end
-      end
-      context 'without ssh.username specified' do
-        it 'returns ssh.username' do
-          ssh_config.stub(:username) { nil }
-          config.stub(:ssh_username) { 'test_username' }
-          config.stub(:floating_ip) { '80.80.80.80' }
-          config.stub(:keypair_name) { 'my_keypair' }
-          @action.read_ssh_info(env).should eq(host: '80.80.80.80', port: 22, username: 'test_username', log_level: 'ERROR')
-        end
-      end
-    end
-
-    context 'with ssh.port overriden' do
-      it 'returns ssh.port' do
-        ssh_config.stub(:port) { 33 }
-        config.stub(:floating_ip) { '80.80.80.80' }
-        config.stub(:keypair_name) { 'my_keypair' }
-        @action.read_ssh_info(env).should eq(host: '80.80.80.80', port: 33, username: 'sshuser', log_level: 'ERROR')
-      end
-    end
-
-    context 'with config.floating_ip specified' do
-      context 'with keypair_name specified' do
-        it 'returns the specified floating ip' do
-          config.stub(:floating_ip) { '80.80.80.80' }
-          config.stub(:keypair_name) { 'my_keypair' }
-          @action.read_ssh_info(env).should eq(host: '80.80.80.80', port: 22, username: 'sshuser', log_level: 'ERROR')
-        end
-      end
-
-      context 'with public_key_path specified' do
-        it 'returns the specified floating ip' do
-          config.stub(:floating_ip) { '80.80.80.80' }
-          config.stub(:keypair_name) { nil }
-          config.stub(:public_key_path) { '/public/key/path' }
-          @action.read_ssh_info(env).should eq(host: '80.80.80.80', port: 22, username: 'sshuser', log_level: 'ERROR')
-        end
-      end
-
-      context 'with neither keypair_name nor public_key_path specified' do
-        it 'returns the specified floating ip ' do
-          config.stub(:floating_ip) { '80.80.80.80' }
-          config.stub(:keypair_name) { nil }
-          config.stub(:public_key_path) { nil }
-          deltacloud.stub(:get_server_details) { { 'key_name' => 'my_keypair_name' } }
-          expect(deltacloud).to receive(:get_server_details).with(env, '1234')
-          @action.read_ssh_info(env).should eq(
-            host: '80.80.80.80',
-            port: 22,
-            username: 'sshuser',
-            private_key_path: '/data/dir/my_keypair_name',
-            log_level: 'ERROR')
-        end
-      end
-    end
-
-    context 'without config.floating_ip specified' do
-      it 'return the a floating_ip found by querying server details' do
+    context 'in a normal case' do
+      it 'return the ip found by querying server details' do
         deltacloud.stub(:get_server_details).with(env, '1234') do
           {
             'addresses' => {
@@ -153,12 +78,12 @@ describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
                 'addr' => '13.13.13.13'
               }, {
                 'addr' => '12.12.12.12',
-                'OS-EXT-IPS:type' => 'floating'
+                'OS-EXT-IPS:type' => 'fixed'
               }]
             }
           }
         end
-        config.stub(:keypair_name) { 'my_keypair' }
+        config.stub(:public_key_name) { 'my_public_key' }
         @action.read_ssh_info(env).should eq(host: '12.12.12.12', port: 22, username: 'sshuser', log_level: 'ERROR')
       end
     end

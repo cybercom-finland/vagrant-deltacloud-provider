@@ -1,14 +1,14 @@
 require 'vagrant-deltacloud-provider/spec_helper'
 
-describe VagrantPlugins::Deltacloud::Command::FlavorList do
+describe VagrantPlugins::Deltacloud::Command::HardwareProfileList do
   describe 'cmd' do
 
     let(:deltacloud) do
       double('deltacloud').tap do |deltacloud|
-        deltacloud.stub(:get_all_flavors) do
+        deltacloud.stub(:list_hardware_profiles) do
           [
-            Flavor.new('001', 'small', '1', '1024', '10'),
-            Flavor.new('002', 'large', '4', '4096', '100')
+            HardwareProfile.new('001', 'small', '1', '1024', '10'),
+            HardwareProfile.new('002', 'large', '4', '4096', '100')
           ]
         end
       end
@@ -24,11 +24,11 @@ describe VagrantPlugins::Deltacloud::Command::FlavorList do
     end
 
     before :each do
-      @flavor_list_cmd = VagrantPlugins::Deltacloud::Command::FlavorList.new(nil, env)
+      @hardware_profile_list_cmd = VagrantPlugins::Deltacloud::Command::HardwareProfileList.new(nil, env)
     end
 
-    it 'prints flavor list from server' do
-      deltacloud.should_receive(:get_all_flavors).with(env)
+    it 'prints hardware profile list from server' do
+      deltacloud.should_receive(:get_all_hardwre_profiles).with(env)
 
       expect(env[:ui]).to receive(:info).with('
 +-----+-------+------+----------+----------------+
@@ -38,7 +38,7 @@ describe VagrantPlugins::Deltacloud::Command::FlavorList do
 | 002 | large | 4    | 4096     | 100            |
 +-----+-------+------+----------+----------------+')
 
-      @flavor_list_cmd.cmd('flavor-list', [], env)
+      @hardware_profile_list_cmd.cmd('hardware-profile-list', [], env)
     end
   end
 end

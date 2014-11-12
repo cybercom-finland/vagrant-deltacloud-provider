@@ -4,19 +4,19 @@ require 'vagrant-deltacloud-provider/command/abstract_command'
 module VagrantPlugins
   module Deltacloud
     module Command
-      class FlavorList < AbstractCommand
+      class HardwareProfileList < AbstractCommand
         include VagrantPlugins::Deltacloud::Command::Utils
 
         def self.synopsis
-          I18n.t('vagrant_deltacloud.command.flavor_list_synopsis')
+          I18n.t('vagrant_deltacloud.command.hardware_profile_list_synopsis')
         end
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
-          flavors = env[:deltacloud_client].deltacloud.get_all_flavors(env)
+          hardware_profiles = env[:deltacloud_client].deltacloud.list_hardware_profiles(env)
 
           rows = []
-          flavors.each do |f|
-            rows << [f.id, f.name, f.vcpus, f.ram, f.disk]
+          hardware_profiles.each do |h|
+            rows << [h.id, h.name, h.vcpus, h.ram, h.disk]
           end
           display_table(env, ['Id', 'Name', 'vCPU', 'RAM (Mo)', 'Disk size (Go)'], rows)
         end

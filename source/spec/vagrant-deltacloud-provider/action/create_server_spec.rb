@@ -27,10 +27,10 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
     end
   end
 
-  let(:flavor) do
-    double('flavor').tap do |flavor|
-      flavor.stub(:name) { 'flavor_name'  }
-      flavor.stub(:id) { 'flavor123' }
+  let(:hardware_profile) do
+    double('hardware_profile').tap do |hardware_profile|
+      hardware_profile.stub(:name) { 'hardware_profile_name'  }
+      hardware_profile.stub(:id) { 'hardware_profile123' }
     end
   end
 
@@ -54,8 +54,8 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
 
   let(:resolver) do
     double('resolver').tap do |r|
-      r.stub(:resolve_flavor).with(anything) do
-        Flavor.new('flavor-01', 'small', nil, nil, nil)
+      r.stub(:resolve_hardware_profile).with(anything) do
+        HardwareProfile.new('hardware_profile-01', 'small', nil, nil, nil)
       end
       r.stub(:resolve_image).with(anything) do
         Item.new('image-01', 'ubuntu')
@@ -64,8 +64,8 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
       r.stub(:resolve_volumes).with(anything) do
         [{ id: 'vol-01', device: nil }]
       end
-      r.stub(:resolve_keypair).with(anything) { 'key' }
-      r.stub(:resolve_floating_ip).with(anything) { '1.2.3.4' }
+      r.stub(:resolve_public_key_name).with(anything) { 'key' }
+      r.stub(:resolve_ip).with(anything) { '1.2.3.4' }
       r.stub(:resolve_security_groups).with(anything) do
         [{ name: 'group1' }, { name: 'group2' }]
       end
@@ -95,13 +95,11 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
     context 'with full options' do
       it 'works' do
         allow(@action).to receive(:create_server).and_return('45678')
-        allow(@action).to receive(:assign_floating_ip).and_return('1.2.3.4')
         allow(@action).to receive(:waiting_for_server_to_be_built)
         allow(@action).to receive(:attach_volumes)
         allow(@action).to receive(:waiting_for_server_to_be_reachable)
 
         expect(@action).to receive(:waiting_for_server_to_be_built).with(env, '45678')
-        expect(@action).to receive(:assign_floating_ip).with(env, '45678').and_return('1.2.3.4')
         expect(@action).to receive(:attach_volumes).with(env, '45678', [{ id: 'vol-01', device: nil }])
 
         @action.call(env)
@@ -115,10 +113,10 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
         deltacloud.stub(:create_server).with(
         env,
         name: 'testName',
-        flavor_ref: flavor.id,
+        hardware_profile_ref: hardware_profile.id,
         image_ref: image.id,
         networks: [{ uuid: 'test-networks-1' }, { uuid: 'test-networks-2', fixed_ip: '1.2.3.4' }],
-        keypair: 'test-keypair',
+        public_key: 'test-public_key',
         availability_zone: 'test-az',
         scheduler_hints: 'test-sched-hints',
         security_groups: ['test-sec-groups'],
@@ -127,11 +125,11 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
         end
 
         options = {
-          flavor: flavor,
+          hardware_profile: hardware_profile,
           image: image,
           networks: [{ uuid: 'test-networks-1' }, { uuid: 'test-networks-2', fixed_ip: '1.2.3.4' }],
           volumes: [{ id: '001', device: :auto }, { id: '002', device: '/dev/vdc' }],
-          keypair_name: 'test-keypair',
+          public_key_name_name: 'test-public_key_name',
           availability_zone: 'test-az',
           scheduler_hints: 'test-sched-hints',
           security_groups: ['test-sec-groups'],
@@ -148,10 +146,10 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
         deltacloud.stub(:create_server).with(
           env,
           name: nil,
-          flavor_ref: flavor.id,
+          hardware_profile_ref: hardware_profile.id,
           image_ref: image.id,
           networks: [{ uuid: 'test-networks-1' }],
-          keypair: 'test-keypair',
+          public_key_name: 'test-public_key_name',
           availability_zone: nil,
           scheduler_hints: nil,
           security_groups: [],
@@ -160,11 +158,11 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
         end
 
         options = {
-          flavor: flavor,
+          hardware_profile: hardware_profile,
           image: image,
           networks: [{ uuid: 'test-networks-1' }],
           volumes: [],
-          keypair_name: 'test-keypair',
+          public_key_name: 'test-public_key_name',
           availability_zone: nil,
           scheduler_hints: nil,
           security_groups: [],
@@ -193,36 +191,6 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
         deltacloud.stub(:get_server_details).and_return({ 'status' => 'BUILD' }, { 'status' => 'ERROR' })
         deltacloud.should_receive(:get_server_details).with(env, 'server-01').exactly(2).times
         expect { @action.waiting_for_server_to_be_built(env, 'server-01', 1, 3) }.to raise_error Errors::ServerStatusError
-      end
-    end
-  end
-
-  describe 'assign_floating_ip' do
-    context 'When resolve correctly floating ip' do
-      it 'calls deltacloud to assign floating ip' do
-        resolver.stub(:resolve_floating_ip).and_return '1.2.3.4'
-        deltacloud.stub(:add_floating_ip)
-        expect(resolver).to receive(:resolve_floating_ip).with(env)
-        expect(deltacloud).to receive(:add_floating_ip).with(env, 'server-01', '1.2.3.4')
-        @action.assign_floating_ip(env, 'server-01')
-      end
-    end
-    context 'When unable to resolve floating ip' do
-      it 'does not fail' do
-        resolver.stub(:resolve_floating_ip).and_raise Errors::UnableToResolveFloatingIP
-        deltacloud.stub(:add_floating_ip)
-        expect(resolver).to receive(:resolve_floating_ip).with(env)
-        expect(deltacloud).to_not receive(:add_floating_ip)
-        @action.assign_floating_ip(env, 'server-01')
-      end
-    end
-    context 'When neither floating ip nor floating ip pool is configured' do
-      it 'does nothing' do
-        resolver.stub(:resolve_floating_ip).and_return nil
-        deltacloud.stub(:add_floating_ip)
-        expect(resolver).to receive(:resolve_floating_ip).with(env)
-        expect(deltacloud).to_not receive(:add_floating_ip)
-        @action.assign_floating_ip(env, 'server-01')
       end
     end
   end

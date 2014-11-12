@@ -40,13 +40,13 @@ module VagrantPlugins
             port: @resolver.resolve_ssh_port(env),
             username: @resolver.resolve_ssh_username(env)
           }
-          hash[:private_key_path] = "#{env[:machine].data_dir}/#{get_keypair_name(env)}" unless config.keypair_name || config.public_key_path
+          hash[:private_key_path] = "#{env[:machine].data_dir}/#{get_public_key_name(env)}" unless config.public_key_name || config.public_key_path
           # Should work silently when https://github.com/mitchellh/vagrant/issues/4637 is fixed
           hash[:log_level] = 'ERROR'
           hash
         end
 
-        def get_keypair_name(env)
+        def get_public_key_name(env)
           env[:deltacloud_client].deltacloud.get_server_details(env, env[:machine].id)['key_name']
         end
       end

@@ -19,7 +19,7 @@ describe VagrantPlugins::Deltacloud::Action::WaitForServerToBeAccessible do
 
   let(:resolver) do
     double('resolver').tap do |r|
-      r.stub(:resolve_floating_ip).with(anything) { '1.2.3.4' }
+      r.stub(:resolve_ip).with(anything) { '1.2.3.4' }
     end
   end
 

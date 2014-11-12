@@ -25,7 +25,7 @@ module VagrantPlugins
           ssh_timeout = env[:machine].provider_config.ssh_timeout
           return if server_is_reachable?(env, ssh_timeout)
           env[:ui].error(I18n.t('vagrant_deltacloud.timeout'))
-          fail Errors::SshUnavailable, host: @resolver.resolve_floating_ip(env), timeout: ssh_timeout
+          fail Errors::SshUnavailable, host: @resolver.resolve_ip(env), timeout: ssh_timeout
         end
 
         def server_is_reachable?(env, timeout)
