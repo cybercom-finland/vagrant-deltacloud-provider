@@ -17,7 +17,7 @@ module VagrantPlugins
           if env[:machine].id
             @logger.info "Deleting server #{env[:machine].id}..."
             env[:ui].info(I18n.t('vagrant_deltacloud.deleting_server'))
-            instance_details = get_instance_details(env, instance_id)
+            instance_details = env[:deltacloud_client].get_instance_details(env, env[:machine].id)
             key_id = instance_details.key_name
             env[:deltacloud_client].destroy_instance(env, env[:machine].id)
             env[:deltacloud_client].delete_public_key(env, key_id)
