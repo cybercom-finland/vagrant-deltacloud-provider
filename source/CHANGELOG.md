@@ -1,3 +1,7 @@
+# 0.0.6 (November 13, 2014)
+
+* Fixed the colorize usage.
+
 # 0.0.5 (November 13, 2014)
 
 * Colored -> Colorize.
