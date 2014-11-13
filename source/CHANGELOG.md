@@ -1,3 +1,7 @@
+# 0.0.7 (November 13, 2014)
+
+* Turned off the colorize usage, doesn't work from gems installation for some strange reason.
+
 # 0.0.6 (November 13, 2014)
 
 * Fixed the colorize usage.
