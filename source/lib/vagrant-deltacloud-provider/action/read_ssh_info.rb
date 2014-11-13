@@ -49,7 +49,7 @@ module VagrantPlugins
         end
 
         def get_public_key_name(env)
-          env[:deltacloud_client].get_instance_details(env, env[:machine].id)['key_name']
+          env[:deltacloud_client].get_instance_details(env, env[:machine].id).key_name
         end
       end
 

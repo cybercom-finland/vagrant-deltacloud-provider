@@ -22,6 +22,7 @@ module VagrantPlugins
 
         def read_state(env)
           machine = env[:machine]
+          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           return :not_created if machine.id.nil?
 
           # Find the machine

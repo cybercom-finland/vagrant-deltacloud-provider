@@ -51,16 +51,14 @@ module VagrantPlugins
         instance_list = get(env, '/instances')
         JSON.parse(instance_list)['instances'].map do |i|
           Instance.new(
-            i['id'], i['name'], i['state'])
+            i['id'], i['name'], i['state'], i['authentication']['keyname'])
         end
       end
 
       def get_instance_details(env, instance_id)
         instance_details = get(env, '/instances/' + instance_id)
-        JSON.parse(instance_details)['instances'].map do |i|
-          Instance.new(
-            i['id'], i['name'], i['state'])
-        end
+        i = JSON.parse(instance_details)['instance']
+        Instance.new(i['id'], i['name'], i['state'], i['authentication']['keyname'])
       end
 
       def launch_instance(env, name, image_id, size_id, public_key_name)
@@ -72,7 +70,8 @@ module VagrantPlugins
           'hwp_id' =>   size_id,
           'keyname' =>  public_key_name
         )
-        JSON.parse(response)
+        i = JSON.parse(response)['instance']
+        Instance.new(i['id'], i['name'], i['state'], i['authentication']['keyname'])
       end
 
       def stop_instance(env, instance_id)

@@ -21,7 +21,7 @@ module VagrantPlugins
             env[:ui].info(I18n.t('vagrant_deltacloud.waiting_start'))
             client = env[:deltacloud_client]
             timeout(@timeout, Errors::Timeout) do
-              while client.get_instance_details(env, env[:machine].id)['status'] != 'RUNNING'
+              while client.get_instance_details(env, env[:machine].id).status != 'RUNNING'
                 sleep @retry_interval
                 @logger.info('Waiting for server to be active')
               end

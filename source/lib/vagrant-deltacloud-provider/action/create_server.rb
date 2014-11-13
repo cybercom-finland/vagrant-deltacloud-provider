@@ -36,7 +36,8 @@ module VagrantPlugins
             metadata: env[:machine].provider_config.metadata
           }
 
-          server_id = create_server(env, options)
+          server = create_server(env, options)
+          server_id = server.id
 
           # Store the ID right away so we can track it
           env[:machine].id = server_id
@@ -85,10 +86,10 @@ module VagrantPlugins
           @logger.info "Waiting for the server with id #{server_id} to be built..."
           env[:ui].info(I18n.t('vagrant_deltacloud.waiting_for_build'))
           timeout(timeout, Errors::Timeout) do
-            server_status = 'STOPPED'
+            server_status = 'PENDING'
             until server_status == 'RUNNING'
               @logger.debug('Waiting for server to be RUNNING')
-              server_status = env[:deltacloud_client].get_instance_details(env, server_id)['status']
+              server_status = env[:deltacloud_client].get_instance_details(env, server_id).status
               fail Errors::ServerStatusError, server: server_id if server_status == 'ERROR'
               sleep retry_interval
             end
