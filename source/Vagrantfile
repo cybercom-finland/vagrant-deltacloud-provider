@@ -13,6 +13,7 @@ Vagrant.configure('2') do |config|
     os.password              = ENV['OS_PASSWORD']
     os.hardware_profile      = ENV['OS_HARDWARE_PROFILE']
     os.image                 = ENV['OS_IMAGE']
+    os.server_name           = ENV['OS_SERVER_NAME']
   end
 
   config.vm.provision "shell", inline: "echo 'ok' > ~/provision"
