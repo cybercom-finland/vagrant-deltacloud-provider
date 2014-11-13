@@ -1,3 +1,7 @@
+# 0.0.5 (November 13, 2014)
+
+* Colored -> Colorize.
+
 # 0.0.4 (November 13, 2014)
 
 * Added colored dependency to Rakefile.
