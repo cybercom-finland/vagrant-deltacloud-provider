@@ -23,7 +23,7 @@ module VagrantPlugins
         rescue Errors::VagrantDeltacloudError => e
           raise e
         rescue Exception => e
-          puts I18n.t('vagrant_deltacloud.global_error').colorize(:red) unless e.message && e.message.start_with?('Catched Error:')
+          puts I18n.t('vagrant_deltacloud.global_error') unless e.message && e.message.start_with?('Catched Error:')
           raise e
         end
         # rubocop:enable Lint/RescueException
