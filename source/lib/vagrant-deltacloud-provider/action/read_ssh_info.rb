@@ -1,7 +1,7 @@
 require 'log4r'
 
 require 'vagrant-deltacloud-provider/config_resolver'
-require 'vagrant-deltacloud-provider/utils'
+require 'vagrant-deltacloud-provider/command/utils'
 require 'vagrant-deltacloud-provider/action/abstract_action'
 require 'vagrant-deltacloud-provider/client/deltacloud'
 
@@ -12,11 +12,11 @@ module VagrantPlugins
       # `:machine_ssh_info` key in the environment.
 
       class ReadSSHInfo < AbstractAction
-        def initialize(app, _env, resolver = ConfigResolver.new, utils = Utils.new)
+        include VagrantPlugins::Deltacloud::Command::Utils
+        def initialize(app, _env, resolver = ConfigResolver.new)
           @app    = app
           @logger = Log4r::Logger.new('vagrant_deltacloud::action::read_ssh_info')
           @resolver = resolver
-          @utils = utils
         end
 
         def execute(env)
@@ -38,7 +38,7 @@ module VagrantPlugins
           config = env[:machine].provider_config
           env[:ui].warn('SSH is disabled in the provider config. The action you are attempting is likely to fail') if config.ssh_disabled
           hash = {
-            host: @utils.get_ip_address(env),
+            host: get_ip_address(env),
             port: @resolver.resolve_ssh_port(env),
             username: @resolver.resolve_ssh_username(env)
           }

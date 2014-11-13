@@ -30,6 +30,10 @@ module VagrantPlugins
         JSON.parse(response)
       end
 
+      def delete_public_key(env, key_id)
+        delete(env, '/keys/' + key_id)
+      end
+
       def list_images(env)
         image_list = get(env, '/images')
         JSON.parse(image_list)['images'].map do |i|
@@ -99,8 +103,7 @@ module VagrantPlugins
       end
 
       def destroy_instance(env, instance_id)
-        response = delete(env, '/instances/' + instance_id)
-        JSON.parse(response)
+        delete(env, '/instances/' + instance_id)
       end
 
       def create_volume(env, volume_name, volume_size_in_gbs)
