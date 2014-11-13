@@ -88,7 +88,7 @@ module VagrantPlugins
             server_status = 'WAITING'
             until server_status == 'ACTIVE'
               @logger.debug('Waiting for server to be ACTIVE')
-              server_status = env[:deltacloud_client].get_server_details(env, server_id)['status']
+              server_status = env[:deltacloud_client].get_instance_details(env, server_id)['status']
               fail Errors::ServerStatusError, server: server_id if server_status == 'ERROR'
               sleep retry_interval
             end

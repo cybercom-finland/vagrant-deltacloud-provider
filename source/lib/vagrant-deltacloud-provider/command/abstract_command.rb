@@ -6,13 +6,13 @@ module VagrantPlugins
       class AbstractCommand < Vagrant.plugin('2', :command)
         def initialize(argv, env)
           @env = env
-          env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           super(normalize_args(argv), env)
         end
 
         def execute(name)
           env = {}
           with_target_vms(nil, provider: :deltacloud) do |machine|
+            env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
             env[:machine] = machine
             env[:ui] = @env.ui
           end
