@@ -1,3 +1,7 @@
+# 0.0.3 (November 13, 2014)
+
+* Added colored dependency.
+
 # 0.0.2 (November 13, 2014)
 
 * "vagrant deltacloud", "vagrant deltacloud ...", "vagrant up" and "vagrant destroy" work.
