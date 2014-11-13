@@ -1,3 +1,7 @@
+# 0.0.2 (November 13, 2014)
+
+* "vagrant deltacloud", "vagrant deltacloud ...", "vagrant up" and "vagrant destroy" work.
+
 # 0.0.1 (November 11, 2014)
 
 * Forked the vagrant-deltacloud-provider (https://github.com/ggiamarchi/vagrant-openstack-provider).
