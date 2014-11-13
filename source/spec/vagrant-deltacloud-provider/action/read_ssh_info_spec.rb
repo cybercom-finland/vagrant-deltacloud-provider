@@ -71,7 +71,7 @@ describe VagrantPlugins::Deltacloud::Action::ReadSSHInfo do
   describe 'read_ssh_info' do
     context 'in a normal case' do
       it 'return the ip found by querying server details' do
-        deltacloud.stub(:get_server_details).with(env, '1234') do
+        deltacloud.stub(:get_instance_details).with(env, '1234') do
           {
             'addresses' => {
               'toto' => [{

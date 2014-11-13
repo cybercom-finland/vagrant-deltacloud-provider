@@ -25,7 +25,7 @@ module VagrantPlugins
           return :not_created if machine.id.nil?
 
           # Find the machine
-          server = env[:deltacloud_client].get_server_details(env, machine.id)
+          server = env[:deltacloud_client].get_instance_details(env, machine.id)
           if server.nil? || server['status'] == 'DELETED'
             # The machine can't be found
             @logger.info('Machine not found or deleted, assuming it got destroyed.')

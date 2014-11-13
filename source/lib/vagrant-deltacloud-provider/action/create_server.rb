@@ -85,9 +85,9 @@ module VagrantPlugins
           @logger.info "Waiting for the server with id #{server_id} to be built..."
           env[:ui].info(I18n.t('vagrant_deltacloud.waiting_for_build'))
           timeout(timeout, Errors::Timeout) do
-            server_status = 'WAITING'
-            until server_status == 'ACTIVE'
-              @logger.debug('Waiting for server to be ACTIVE')
+            server_status = 'STOPPED'
+            until server_status == 'RUNNING'
+              @logger.debug('Waiting for server to be RUNNING')
               server_status = env[:deltacloud_client].get_instance_details(env, server_id)['status']
               fail Errors::ServerStatusError, server: server_id if server_status == 'ERROR'
               sleep retry_interval

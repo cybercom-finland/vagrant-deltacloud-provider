@@ -177,18 +177,18 @@ describe VagrantPlugins::Deltacloud::Action::CreateServer do
   describe 'waiting_for_server_to_be_built' do
     context 'when server is not yet active' do
       it 'become active after one retry' do
-        deltacloud.stub(:get_server_details).and_return({ 'status' => 'BUILD' }, { 'status' => 'ACTIVE' })
-        deltacloud.should_receive(:get_server_details).with(env, 'server-01').exactly(2).times
+        deltacloud.stub(:get_instance_details).and_return({ 'status' => 'BUILD' }, { 'status' => 'ACTIVE' })
+        deltacloud.should_receive(:get_instance_details).with(env, 'server-01').exactly(2).times
         @action.waiting_for_server_to_be_built(env, 'server-01', 1, 5)
       end
       it 'timeout before the server become active' do
-        deltacloud.stub(:get_server_details).and_return({ 'status' => 'BUILD' }, { 'status' => 'BUILD' })
-        deltacloud.should_receive(:get_server_details).with(env, 'server-01').at_least(2).times
+        deltacloud.stub(:get_instance_details).and_return({ 'status' => 'BUILD' }, { 'status' => 'BUILD' })
+        deltacloud.should_receive(:get_instance_details).with(env, 'server-01').at_least(2).times
         expect { @action.waiting_for_server_to_be_built(env, 'server-01', 1, 3) }.to raise_error Errors::Timeout
       end
       it 'raise an error after one retry' do
-        deltacloud.stub(:get_server_details).and_return({ 'status' => 'BUILD' }, { 'status' => 'ERROR' })
-        deltacloud.should_receive(:get_server_details).with(env, 'server-01').exactly(2).times
+        deltacloud.stub(:get_instance_details).and_return({ 'status' => 'BUILD' }, { 'status' => 'ERROR' })
+        deltacloud.should_receive(:get_instance_details).with(env, 'server-01').exactly(2).times
         expect { @action.waiting_for_server_to_be_built(env, 'server-01', 1, 3) }.to raise_error Errors::ServerStatusError
       end
     end

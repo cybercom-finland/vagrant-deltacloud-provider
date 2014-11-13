@@ -22,14 +22,17 @@ module VagrantPlugins
       end
 
       class Instance < Item
-        def initialize(id, name)
+        attr_accessor :status
+
+        def initialize(id, name, status = nil)
+          @status = status
           super(id, name)
         end
 
         protected
 
         def state
-          [@id, @name]
+          [@id, @name, @status]
         end
       end
 

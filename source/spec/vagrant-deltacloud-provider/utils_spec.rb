@@ -27,7 +27,7 @@ describe VagrantPlugins::Deltacloud::Utils do
     context 'with ip in deltacloud details' do
       context 'with on single ip in deltacloud details' do
         it 'returns the single ip' do
-          deltacloud.stub(:get_server_details).with(env, '1234id') do
+          deltacloud.stub(:get_instance_details).with(env, '1234id') do
             {
               'addresses' => {
                 'toto' => [{
@@ -43,7 +43,7 @@ describe VagrantPlugins::Deltacloud::Utils do
 
       context 'with multiple ips in deltacloud details' do
         it 'fails' do
-          deltacloud.stub(:get_server_details).with(env, '1234id') do
+          deltacloud.stub(:get_instance_details).with(env, '1234id') do
             {
               'addresses' => {
                 'toto' => [{
@@ -61,7 +61,7 @@ describe VagrantPlugins::Deltacloud::Utils do
 
       context 'with networks but no ips' do
         it 'fails' do
-          deltacloud.stub(:get_server_details).with(env, '1234id') do
+          deltacloud.stub(:get_instance_details).with(env, '1234id') do
             {
               'addresses' => {
                 'toto' => []
@@ -74,7 +74,7 @@ describe VagrantPlugins::Deltacloud::Utils do
 
       context 'with no networks ' do
         it 'fails' do
-          deltacloud.stub(:get_server_details).with(env, '1234id') do
+          deltacloud.stub(:get_instance_details).with(env, '1234id') do
             {
               'addresses' => {}
             }

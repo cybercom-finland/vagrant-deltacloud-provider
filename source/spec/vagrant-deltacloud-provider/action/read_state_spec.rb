@@ -27,9 +27,9 @@ describe VagrantPlugins::Deltacloud::Action::ReadState do
     context 'when server id is present' do
       it 'set the state to the one returned by deltacloud' do
         env[:machine].id = 'server_id'
-        deltacloud.stub(:get_server_details).and_return('status' => 'ACTIVE')
+        deltacloud.stub(:get_instance_details).and_return('status' => 'RUNNING')
 
-        expect(deltacloud).to receive(:get_server_details).with(env, 'server_id')
+        expect(deltacloud).to receive(:get_instance_details).with(env, 'server_id')
         expect(app).to receive(:call)
 
         @action = ReadState.new(app, nil)
@@ -41,7 +41,7 @@ describe VagrantPlugins::Deltacloud::Action::ReadState do
     context 'when server id is not present' do
       it 'set the state to :not_created' do
         env[:machine].id = nil
-        expect(deltacloud).to_not receive(:get_server_details)
+        expect(deltacloud).to_not receive(:get_instance_details)
         expect(app).to receive(:call)
 
         @action = ReadState.new(app, nil)
@@ -53,9 +53,9 @@ describe VagrantPlugins::Deltacloud::Action::ReadState do
     context 'when server cannot be found' do
       it 'set the state to :not_created' do
         env[:machine].id = 'server_id'
-        deltacloud.stub(:get_server_details).and_return(nil)
+        deltacloud.stub(:get_instance_details).and_return(nil)
 
-        expect(deltacloud).to receive(:get_server_details).with(env, 'server_id')
+        expect(deltacloud).to receive(:get_instance_details).with(env, 'server_id')
         expect(app).to receive(:call)
 
         @action = ReadState.new(app, nil)
