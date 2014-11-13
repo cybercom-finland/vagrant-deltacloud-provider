@@ -1,3 +1,7 @@
+# 0.0.4 (November 13, 2014)
+
+* Added colored dependency to Rakefile.
+
 # 0.0.3 (November 13, 2014)
 
 * Added colored dependency.
