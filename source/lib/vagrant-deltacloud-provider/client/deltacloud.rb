@@ -57,7 +57,7 @@ module VagrantPlugins
 
       def get_instance_details(env, instance_id)
         instance_details = get(env, '/instances/' + instance_id)
-        JSON.parse(instance_list)['instances'].map do |i|
+        JSON.parse(instance_details)['instances'].map do |i|
           Instance.new(
             i['id'], i['name'], i['state'])
         end
