@@ -16,6 +16,11 @@ module VagrantPlugins
           table = Terminal::Table.new headings: headers, rows: rows
           env[:ui].info("\n#{table}")
         end
+
+        def get_ip_address(env)
+          details = env[:deltacloud_client].get_instance_details(env, env[:machine].id)
+          details.ip_address
+        end
       end
     end
   end

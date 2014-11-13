@@ -24,17 +24,19 @@ module VagrantPlugins
       class Instance < Item
         attr_accessor :status
         attr_accessor :key_name
+        attr_accessor :ip_address
 
-        def initialize(id, name, status = nil, key_name = nil)
+        def initialize(id, name, status = nil, key_name = nil, ip_address = nil)
           @status = status
           @key_name = key_name
+          @ip_address = ip_address
           super(id, name)
         end
 
         protected
 
         def state
-          [@id, @name, @status, @key_name]
+          [@id, @name, @status, @key_name, @ip_address]
         end
       end
 

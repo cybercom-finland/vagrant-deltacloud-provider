@@ -13,9 +13,9 @@ module VagrantPlugins
         def cmd(name, argv, env)
           fail Errors::NoArgRequiredForCommand, cmd: name unless argv.size == 0
           rows = []
-          headers = %w(Id Name Status Key_name)
+          headers = %w(Id Name Status Key_name IP_address)
           images = env[:deltacloud_client].list_instances(env)
-          images.each { |instance| rows << [instance.id, instance.name, instance.status, instance.key_name] }
+          images.each { |instance| rows << [instance.id, instance.name, instance.status, instance.key_name, instance.ip_address] }
           display_table(env, headers, rows)
         end
       end

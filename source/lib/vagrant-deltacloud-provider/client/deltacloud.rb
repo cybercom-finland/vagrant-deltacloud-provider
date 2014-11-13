@@ -50,15 +50,21 @@ module VagrantPlugins
       def list_instances(env)
         instance_list = get(env, '/instances')
         JSON.parse(instance_list)['instances'].map do |i|
+          ip_address = nil
+          ip_address = i['private_addresses'][0]['address'] if i['private_addresses'][0]
+          ip_address = i['public_addresses'][0]['address'] if i['public_addresses'][0]
           Instance.new(
-            i['id'], i['name'], i['state'], i['authentication']['keyname'])
+            i['id'], i['name'], i['state'], i['authentication']['keyname'], ip_address)
         end
       end
 
       def get_instance_details(env, instance_id)
         instance_details = get(env, '/instances/' + instance_id)
         i = JSON.parse(instance_details)['instance']
-        Instance.new(i['id'], i['name'], i['state'], i['authentication']['keyname'])
+        ip_address = nil
+        ip_address = i['private_addresses'][0]['address'] if i['private_addresses'][0]
+        ip_address = i['public_addresses'][0]['address'] if i['public_addresses'][0]
+        Instance.new(i['id'], i['name'], i['state'], i['authentication']['keyname'], ip_address)
       end
 
       def launch_instance(env, name, image_id, size_id, public_key_name)
@@ -71,7 +77,10 @@ module VagrantPlugins
           'keyname' =>  public_key_name
         )
         i = JSON.parse(response)['instance']
-        Instance.new(i['id'], i['name'], i['state'], i['authentication']['keyname'])
+        ip_address = nil
+        ip_address = i['private_addresses'][0]['address'] if i['private_addresses'][0]
+        ip_address = i['public_addresses'][0]['address'] if i['public_addresses'][0]
+        Instance.new(i['id'], i['name'], i['state'], i['authentication']['keyname'], ip_address)
       end
 
       def stop_instance(env, instance_id)
