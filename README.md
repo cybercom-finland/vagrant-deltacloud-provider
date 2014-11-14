@@ -14,8 +14,6 @@ This plugin is made to work for example with Cybercom Deltacloud API: [https://c
 ## Features
 
 * Create and boot Deltacloud instances
-* Halt and reboot instances
-* Suspend and resume instances
 * SSH into the instances
 * Provision the instances with any built-in Vagrant provisioner
 * Minimal synced folder support via `rsync`
@@ -33,8 +31,8 @@ $ vagrant up --provider=deltacloud
 ...
 ```
 
-Of course prior to doing this, you'll need to obtain an Deltacloud-compatible
-box file for Vagrant.
+Of course prior to doing this, you'll need to obtain a Deltacloud-compatible
+box file for Vagrant. For example here: https://github.com/cybercom-finland/vagrant-deltacloud-provider/raw/master/source/dummy.box
 
 ## Quick Start
 
@@ -57,11 +55,11 @@ Vagrant.configure('2') do |config|
 
   config.vm.provider :deltacloud do |os|
     os.deltacloud_api_url = 'https://standard.fi-central.cybercomcloud.com/api'
-    os.username           = 'deltacloudUser'
-    os.password           = 'deltacloudPassword'
+    os.username           = 'myDeltacloudUser'
+    os.password           = 'myDeltacloudPassword'
     os.tenant_name        = 'myTenant'
-    os.hardware_profile   = 'm1.small'
-    os.image              = 'ubuntu'
+    os.hardware_profile   = 'M-60'
+    os.image              = 'ubuntu1404_qcow2_64_141105.ubuntu1404-IaaS-publish-22'
   end
 end
 ```
@@ -90,52 +88,15 @@ This provider exposes quite a few provider-specific configuration options:
   can be overridden with this.
 * `hardware_profile` - The name of the hardware_profile to use for the VM
 * `image` - The name of the image to use for the VM
-* `availability_zone` - Nova Availability zone used when creating VM
-* `security_groups` - List of strings representing the security groups to apply. e.g. ['ssh', 'http']
 * `user_data` - String of User data to be sent to the newly created Deltacloud instance. Use this e.g. to inject a script at boot time.
 * `metadata` - A Hash of metadata that will be sent to the instance for configuration e.g. `os.metadata  = { 'key' => 'value' }`
-* `scheduler_hints` - Pass hints to the Deltacloud scheduler, e.g. { "cell": "some cell name" }
 
 #### Networks
-
-* `networks` - Network list the server must be connected on. Can be omitted if only one private network exists
-  in the Deltacloud project
 
 Networking features in the form of `config.vm.network` are not
 supported with `vagrant-deltacloud`, currently. If any of these are
 specified, Vagrant will emit a warning, but will otherwise boot
 the Deltacloud server.
-
-You can provide network id or name. However, in Deltacloud a network name is not unique, thus if there are two networks with
-the same name in your project the plugin will fail. If so, you have to use only ids. Optionally, you can specify the IP
-address that will be assigned to the instance if you need a static address or if DHCP is not enable for this network.
-
-Here's an example which connect the instance to six Networks :
-
-```ruby
-config.vm.provider :deltacloud do |os|
-  ...
-    os.networks = [
-      'net-name-01',
-      '287132f0-57e6-4c31-a1ee-4823e9786ff2',
-      {
-        name: 'net-name-03',
-        address: '192.168.22.43'
-      },
-      {
-        id: '7dfdcf01-5177-4774-9473-2ae92a6447d4',
-        address: '192.168.43.76'
-      },
-      {
-        name: 'net-name-05'
-      },
-      {
-        id: '01e0950f-c668-4efe-821b-93ff6e427562'
-      }
-    ]
-  ...
-end
-```
 
 #### Volumes
 
@@ -171,13 +132,15 @@ end
 
 ### SSH authentication
 
+You will most likely want to let the Vagrant provider to automatically create the key pair and publish the public key to the cloud for you. In that case, just leave out the authentication options. The following configuration options are for more complex use cases only.
+
 * `public_key_name` - The name of the key pair register in Deltacloud to associate with the VM. The public key should
   be the matching pair for the private key configured with `config.ssh.private_key_path` on Vagrant.
 * `public_key_path` - if `public_key_name` is not provided, the path to the public key will be used by vagrant to generate a public key on the Deltacloud cloud. The public key will be destroyed when the VM is destroyed.
 
 If neither `public_key_name` nor `public_key_path` are set, vagrant will generate a new ssh key and automatically import it in Deltacloud.
 
-* `ssh_disabled` - if set to `true`, all ssh actions managed by the provider will be disabled. We recommend to use this option only to create private VMs that won't be accessed directly from vagrant. Some actions might still want to connect with SSH (provisionners...). In this case, we will just warn you that the ssh action is likely to fail, but we won't forbid it
+* `ssh_disabled` - if set to `true`, all ssh actions managed by the provider will be disabled. We recommend to use this option only to create private VMs that won't be accessed directly from vagrant. Some actions might still want to connect with SSH (provisioners...). In this case, we will just warn you that the ssh action is likely to fail, but we won't forbid it
 
 ### Synced folders
 
@@ -230,6 +193,7 @@ Usage: vagrant deltacloud command
 
 Available subcommands:
      image-list             List available images
+     instance-list          List available instances
      hardware_profile-list  List available hardware_profiles
      network-list           List private networks in project
      volume-list            List existing volumes
