@@ -1,6 +1,7 @@
 # Vagrant Deltacloud Cloud Provider
 
-**WORK IN PROGRESS**
+**WORK IN PROGRESS:**
+
 **This provider supports creating and destroying instances, and Deltacloud specific listing commands. Instance and volume management commands are not tested yet.**
 
 ## TODO
