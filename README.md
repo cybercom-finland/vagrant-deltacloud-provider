@@ -7,6 +7,7 @@
 * Test and fix volume management commands.
 * Test and fix instance management commands.
 * Fix the automatic tests.
+* Fix the error messages for the error situations. Now all errors give tangentially relevant stacktraces only.
 
 ## Summary
 
