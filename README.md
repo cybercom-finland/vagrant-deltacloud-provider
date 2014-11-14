@@ -63,13 +63,13 @@ Vagrant.configure('2') do |config|
   config.vm.box       = 'deltacloud'
   config.ssh.username = 'ec2-user'
 
-  config.vm.provider :deltacloud do |os|
-    os.deltacloud_api_url = 'https://standard.fi-central.cybercomcloud.com/api'
-    os.username           = 'myDeltacloudUser'
-    os.password           = 'myDeltacloudPassword'
-    os.tenant_name        = 'myTenant'
-    os.hardware_profile   = 'M-60'
-    os.image              = 'ubuntu1404_qcow2_64_141105.ubuntu1404-IaaS-publish-22'
+  config.vm.provider :deltacloud do |dc|
+    dc.deltacloud_api_url = 'https://standard.fi-central.cybercomcloud.com/api'
+    dc.username           = 'myDeltacloudUser'
+    dc.password           = 'myDeltacloudPassword'
+    dc.tenant_name        = 'myTenant'
+    dc.hardware_profile   = 'M-60'
+    dc.image              = 'ubuntu1404_qcow2_64_141105.ubuntu1404-IaaS-publish-22'
   end
 end
 ```
@@ -117,9 +117,9 @@ you have to use only ids. Optionally, you can specify the device that will be as
 Here comes an example that show six volumes attached to a server :
 
 ```ruby
-config.vm.provider :deltacloud do |os|
+config.vm.provider :deltacloud do |dc|
  ...
-os.volumes = [
+dc.volumes = [
   '619e027c-f4a9-493d-8c15-c89de81cb949',
   'vol-name-02',
   {
