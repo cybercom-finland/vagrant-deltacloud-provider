@@ -1,6 +1,14 @@
 # Vagrant Deltacloud Cloud Provider
 
 **WORK IN PROGRESS**
+**This provider supports creating and destroying instances, and Deltacloud specific listing commands. Instance and volume management commands are not tested yet.**
+
+## TODO
+* Test and fix volume management commands.
+* Test and fix instance management commands.
+* Fix the automatic tests.
+
+## Summary
 
 This is a [Vagrant](http://www.vagrantup.com) 1.4+ plugin that adds a
 [Deltacloud](https://deltacloud.apache.org/) provider to Vagrant,
