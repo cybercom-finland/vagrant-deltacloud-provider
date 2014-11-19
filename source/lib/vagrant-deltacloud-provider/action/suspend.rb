@@ -15,7 +15,7 @@ module VagrantPlugins
           if env[:machine].id
             @logger.info "Saving VM #{env[:machine].id} state and suspending execution..."
             env[:ui].info I18n.t('vagrant.actions.vm.suspend.suspending')
-            env[:deltacloud_client].suspend_server(env, env[:machine].id)
+            env[:deltacloud_client].stop_instance(env, env[:machine].id)
           end
 
           @app.call(env)

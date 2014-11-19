@@ -16,7 +16,7 @@ module VagrantPlugins
           env[:deltacloud_client] = Deltacloud::DeltacloudClient.instance
           if env[:machine].id
             env[:ui].info(I18n.t('vagrant_deltacloud.starting_server'))
-            env[:deltacloud_client].start_server(env, env[:machine].id)
+            env[:deltacloud_client].start_instance(env, env[:machine].id)
           end
           @app.call(env)
         end

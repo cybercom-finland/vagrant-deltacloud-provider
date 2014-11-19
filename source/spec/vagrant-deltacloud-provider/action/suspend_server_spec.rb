@@ -4,7 +4,7 @@ describe VagrantPlugins::Deltacloud::Action::Suspend do
 
   let(:deltacloud) do
     double('deltacloud').tap do |deltacloud|
-      deltacloud.stub(:suspend_server)
+      deltacloud.stub(:stop_instance)
     end
   end
 
@@ -29,7 +29,7 @@ describe VagrantPlugins::Deltacloud::Action::Suspend do
     context 'when server id is present' do
       it 'starts the server' do
         env[:machine].id = 'server_id'
-        expect(deltacloud).to receive(:suspend_server).with(env, 'server_id')
+        expect(deltacloud).to receive(:stop_instance).with(env, 'server_id')
         expect(app).to receive(:call)
         @action = Suspend.new(app, nil)
         @action.call(env)
@@ -38,7 +38,7 @@ describe VagrantPlugins::Deltacloud::Action::Suspend do
     context 'when server id is not present' do
       it 'does nothing' do
         env[:machine].id = nil
-        expect(deltacloud).to_not receive(:suspend_server)
+        expect(deltacloud).to_not receive(:stop_instance)
         expect(app).to receive(:call)
         @action = Suspend.new(app, nil)
         @action.call(env)

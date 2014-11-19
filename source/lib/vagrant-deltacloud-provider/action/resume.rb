@@ -15,7 +15,7 @@ module VagrantPlugins
           if env[:machine].id
             @logger.info "Resuming suspended VM #{env[:machine].id}..."
             env[:ui].info I18n.t('vagrant.actions.vm.resume.resuming')
-            env[:deltacloud_client].resume_server(env, env[:machine].id)
+            env[:deltacloud_client].start_instance(env, env[:machine].id)
           end
 
           @app.call(env)

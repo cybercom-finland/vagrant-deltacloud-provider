@@ -17,7 +17,7 @@ module VagrantPlugins
           if env[:machine].id
             @logger.info "Stopping server #{env[:machine].id}..."
             env[:ui].info(I18n.t('vagrant_deltacloud.stopping_server'))
-            env[:deltacloud_client].stop_server(env, env[:machine].id)
+            env[:deltacloud_client].stop_instance(env, env[:machine].id)
           end
           @app.call(env)
         end
