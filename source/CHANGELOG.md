@@ -1,3 +1,7 @@
+# 0.0.9 (November 19, 2014)
+
+* Start / stop support. Suspend / resume bound to start/stop also.
+
 # 0.0.8 (November 13, 2014)
 
 * Clean up and bug fixes.
