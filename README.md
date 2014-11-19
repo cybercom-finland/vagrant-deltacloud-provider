@@ -2,11 +2,10 @@
 
 **WORK IN PROGRESS:**
 
-**This provider supports creating and destroying instances, and Deltacloud specific listing commands. Instance and volume management commands are not tested yet.**
+**This provider supports creating and destroying instances, suspend and resume, and Deltacloud specific listing commands. Volume management commands are not tested yet.**
 
 ## TODO
 * Test and fix volume management commands.
-* Test and fix instance management commands.
 * Fix the automatic tests.
 * Fix the error messages for the error situations. Now all errors give tangentially relevant stacktraces only.
 
